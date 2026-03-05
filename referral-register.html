@@ -1,82 +1,99 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
-<title>Referral Registration</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
+<title>Influencertech Referral Program</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 body{
 font-family: Arial, sans-serif;
-text-align:center;
-margin-top:80px;
 background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
 }
 
 .container{
 background:white;
-padding:30px;
-border-radius:10px;
-width:300px;
-margin:auto;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
+padding:35px;
+border-radius:12px;
+width:320px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+text-align:center;
 }
 
 input{
-width:90%;
-padding:10px;
+width:100%;
+padding:12px;
 margin:10px 0;
-border-radius:5px;
+border-radius:6px;
 border:1px solid #ccc;
 }
 
+<!DOCTYPE html><html>
+<head>
+<title>Influencertech Referral Program</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+body{
+font-family: Arial, sans-serif;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:35px;
+border-radius:12px;
+width:320px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
 button{
-padding:10px 20px;
+flex:1;
+padding:10px;
 border:none;
-border-radius:5px;
+border-radius:6px;
+color:white;
+font-weight:bold;
 cursor:pointer;
-margin:5px;
 }
 
 .register{
 background:#2563eb;
-color:white;
 }
 
 .login{
 background:#16a34a;
-color:white;
 }
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>Join Influencertech Referral Program</h2>
-
-<input id="phone" placeholder="Phone Number"><br>
-<input id="password" type="password" placeholder="Password"><br>
-
+</style></head><body><div class="container"><h2>Join Influencertech Referral Program</h2><input id="phone" placeholder="Phone Number">
+<input id="password" type="password" placeholder="Password"><div class="buttons">
 <button class="register" onclick="registerUser()">Register</button>
-
-<a href="referral-login.html">
-<button class="login">Login</button>
-</a>
-
-</div>
-
-<script>
+<button class="login" onclick="loginUser()">Login</button>
+</div></div><script>
 
 const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
 const { createClient } = supabase
-const supabaseClient = createClient(supabaseUrl, supabaseKey)
+const client = createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
@@ -90,30 +107,47 @@ return
 
 let code = "INF" + Math.floor(Math.random()*10000)
 
-const { error } = await supabaseClient
+const { error } = await client
 .from("referral_users")
-.insert([
-{
+.insert([{
 phone: phone,
 password: password,
 referral_code: code,
 referrals: 0,
 earnings: 0
-}
-])
+}])
 
 if(error){
 alert(error.message)
 return
 }
 
-alert("Account created successfully! Now login.")
-
-window.location.href = "referral-login.html"
+alert("Account created successfully. Now click LOGIN.")
 
 }
 
-</script>
+async function loginUser(){
 
-</body>
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
+
+const { data, error } = await client
+.from("referral_users")
+.select("*")
+.eq("phone", phone)
+.eq("password", password)
+.single()
+
+if(error){
+alert("Invalid phone or password")
+return
+}
+
+localStorage.setItem("user_phone", phone)
+
+window.location.href = "referral-dashboard.html"
+
+}
+
+</script></body>
 </html>
