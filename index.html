@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Influencertech Data Solutions</title>
 <link rel="icon" type="image/png" href="favicon.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 <style>
 body{
 font-family:Arial,Helvetica,sans-serif;
@@ -23,18 +25,9 @@ z-index:1000;
 box-shadow:0 4px 12px rgba(0,0,0,0.35);
 }
 
-header h1{
-margin:0;
-font-size:26px;
-}
+header h1{margin:0;font-size:26px}
+header p{margin:6px 0 0 0;font-size:14px;color:#cbd5e1}
 
-header p{
-margin:6px 0 0 0;
-font-size:14px;
-color:#cbd5e1;
-}
-
-/* scrolling message bar */
 .marquee-bar{
 background:#1f2937;
 color:white;
@@ -48,14 +41,12 @@ left:0;
 right:0;
 z-index:999;
 }
-}
 
 section{
 padding:40px 20px;
 max-width:900px;
 margin:auto;
 margin-top:120px;
-margin:auto;
 }
 
 .hero{
@@ -93,33 +84,13 @@ transform:translateY(-4px);
 box-shadow:0 14px 28px rgba(0,0,0,0.35);
 }
 
-.data-card{
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
-}
-
-.sms-card{
-background:linear-gradient(135deg,#16a34a,#15803d);
-}
-
-.minutes-card{
-background:linear-gradient(135deg,#f97316,#ea580c);
-}
-
-.referral-card{
-background:linear-gradient(135deg,#7c3aed,#6d28d9);
-}
-
-.epl-card{
-background:linear-gradient(135deg,#0ea5e9,#0284c7);
-}
-
-.bonga-card{
-background:linear-gradient(135deg,#8b5cf6,#7c3aed);
-}
-
-.airtime-card{
-background:linear-gradient(135deg,#06b6d4,#0891b2);
-}
+.data-card{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+.sms-card{background:linear-gradient(135deg,#16a34a,#15803d)}
+.minutes-card{background:linear-gradient(135deg,#f97316,#ea580c)}
+.bonga-card{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
+.airtime-card{background:linear-gradient(135deg,#06b6d4,#0891b2)}
+.referral-card{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
+.epl-card{background:linear-gradient(135deg,#0ea5e9,#0284c7)}
 
 .icon{
 width:60px;
@@ -130,16 +101,8 @@ border-radius:12px;
 padding:6px;
 }
 
-.text-group{
-text-align:left;
-}
-
-.text-group small{
-display:block;
-font-weight:normal;
-color:#e5e7eb;
-margin-top:4px;
-}
+.text-group{text-align:left}
+.text-group small{display:block;font-weight:normal;color:#e5e7eb;margin-top:4px}
 
 .whatsapp-float{
 position:fixed;
@@ -156,6 +119,21 @@ box-shadow:0 6px 14px rgba(0,0,0,0.3);
 z-index:1000;
 }
 
+.install-btn{
+position:fixed;
+bottom:160px;
+right:25px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:25px;
+padding:12px 18px;
+font-weight:bold;
+box-shadow:0 6px 14px rgba(0,0,0,0.3);
+cursor:pointer;
+z-index:1000;
+}
+
 footer{
 background:#111827;
 color:#cbd5e1;
@@ -166,6 +144,7 @@ font-size:14px;
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -182,40 +161,40 @@ font-size:14px;
 
 <div class="buttons">
 
-<a class="big-btn data-card" href="https://bingwahybrid.com/influencertech">
-<img class="icon" src="https://img.icons8.com/color/96/wifi.png" alt="Internet Bundles">
+<a class="big-btn data-card" onclick="trackReferral()" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/wifi.png">
 <div class="text-group">
 Bingwa Sokoni Bundles
 <small>Till 8396206</small>
 </div>
 </a>
 
-<a class="big-btn sms-card" href="https://bingwahybrid.com/influencertech">
-<img class="icon" src="https://img.icons8.com/color/96/sms.png" alt="SMS Offers">
+<a class="big-btn sms-card" onclick="trackReferral()" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/sms.png">
 <div class="text-group">
 SMS Offers
 <small>Till 4321426</small>
 </div>
 </a>
 
-<a class="big-btn minutes-card" href="https://bingwahybrid.com/influencertech">
-<img class="icon" src="https://img.icons8.com/color/96/phone.png" alt="Minutes Offers">
+<a class="big-btn minutes-card" onclick="trackReferral()" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/phone.png">
 <div class="text-group">
 Minutes Offers
 <small>Till 7671453</small>
 </div>
 </a>
 
-<a class="big-btn bonga-card" href="https://wa.me/254746975939?text=Hello%20Influencertech%2C%20I%20want%20to%20sell%20Bonga%20Points" target="_blank">
-<img class="icon" src="https://img.icons8.com/color/96/coins.png" alt="Sell Bonga Points">
+<a class="big-btn bonga-card" href="https://wa.me/254746975939?text=Hello%20I%20want%20to%20sell%20Bonga%20Points" target="_blank">
+<img class="icon" src="https://img.icons8.com/color/96/coins.png">
 <div class="text-group">
 Sell Bonga Points
 <small>Tap to WhatsApp us</small>
 </div>
 </a>
 
-<a class="big-btn airtime-card" href="https://wa.me/254746975939?text=Hello%20Influencertech%2C%20I%20want%20to%20buy%20or%20sell%20airtime" target="_blank">
-<img class="icon" src="https://img.icons8.com/color/96/phone-disconnected.png" alt="Buy or Sell Airtime">
+<a class="big-btn airtime-card" href="https://wa.me/254746975939?text=Hello%20I%20want%20to%20buy%20or%20sell%20airtime" target="_blank">
+<img class="icon" src="https://img.icons8.com/color/96/phone-disconnected.png">
 <div class="text-group">
 Buy & Sell Airtime
 <small>Buying at 80% | Selling at 90%</small>
@@ -223,7 +202,7 @@ Buy & Sell Airtime
 </a>
 
 <a class="big-btn referral-card" href="referral-register.html">
-<img class="icon" src="https://img.icons8.com/color/96/money.png" alt="Referral">
+<img class="icon" src="https://img.icons8.com/color/96/money.png">
 <div class="text-group">
 Refer & Earn Money
 <small>5 referrals = KES 50 | 10 = KES 100 | 20 = KES 200</small>
@@ -231,23 +210,13 @@ Refer & Earn Money
 </a>
 
 <a class="big-btn epl-card" href="https://www.epicsports.me/" target="_blank">
-<img class="icon" src="https://img.icons8.com/color/96/football2.png" alt="EPL Streaming">
+<img class="icon" src="https://img.icons8.com/color/96/football2.png">
 <div class="text-group">
 EPL Streaming Site
 <small>Watch Live Matches</small>
 </div>
 </a>
 
-</div>
-
-<div style="margin-top:35px;background:#f8fafc;border-radius:14px;padding:20px;text-align:left;font-size:14px;color:#111827;box-shadow:0 6px 18px rgba(0,0,0,0.15);">
-<b>💰 Referral Program</b><br><br>
-Share your referral message with friends. When they buy bundles, SMS, minutes or airtime from this site, you earn rewards.<br><br>
-<b>Rewards:</b><br>
-• Refer 5 people → KES 50<br>
-• Refer 10 people → KES 100<br>
-• Refer 20 people → KES 200<br><br>
-Tap the <b>Refer & Earn</b> button above to contact us on WhatsApp and start referring.
 </div>
 
 </div>
@@ -257,12 +226,10 @@ Tap the <b>Refer & Earn</b> button above to contact us on WhatsApp and start ref
 <p>© 2026 Influencertech Data Solutions</p>
 </footer>
 
-
-
-
 <button id="installApp" class="install-btn">Install App</button>
 
 <script>
+
 let deferredPrompt;
 const installBtn = document.getElementById('installApp');
 installBtn.style.display = 'none';
@@ -280,50 +247,65 @@ installBtn.addEventListener('click', async () => {
   deferredPrompt = null;
   installBtn.style.display = 'none';
 });
+
 </script>
 
-<style>
-.install-btn{
-position:fixed;
-bottom:160px;
-right:25px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:25px;
-padding:12px 18px;
-font-weight:bold;
-box-shadow:0 6px 14px rgba(0,0,0,0.3);
-cursor:pointer;
-z-index:1000;
-}
-}
-</style>
+<!-- REFERRAL TRACKING SCRIPT -->
+<script>
 
+const params = new URLSearchParams(window.location.search)
+const ref = params.get("ref")
 
+if(ref){
+localStorage.setItem("referralCode", ref)
+}
+
+</script>
+
+<!-- REFERRAL COUNTING SCRIPT -->
+<script>
+
+async function trackReferral(){
+
+let ref = localStorage.getItem("referralCode")
+
+if(!ref) return
+
+const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
+
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+const { data } = await supabase
+.from("referral_users")
+.select("*")
+.eq("referral_code", ref)
+.single()
+
+if(data){
+
+let newRefs = data.referrals + 1
+let newEarn = data.earnings
+
+if(newRefs == 5) newEarn = 50
+if(newRefs == 10) newEarn = 100
+if(newRefs == 20) newEarn = 200
+
+await supabase
+.from("referral_users")
+.update({
+referrals: newRefs,
+earnings: newEarn
+})
+.eq("referral_code", ref)
+
+}
+
+}
+
+</script>
 
 <a href="https://wa.me/254746975939" class="whatsapp-float" target="_blank">Chat Support</a>
-
-<style>
-.whatsapp-float{
-position:fixed;
-bottom:25px;
-right:25px;
-background:#25D366;
-color:white;
-border-radius:30px;
-padding:12px 18px;
-font-size:15px;
-font-weight:bold;
-text-decoration:none;
-box-shadow:0 6px 14px rgba(0,0,0,0.3);
-z-index:1000;
-}
-
-.whatsapp-float:hover{
-background:#1ebe5d;
-}
-</style>
 
 </body>
 </html>
