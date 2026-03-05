@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Referral Registration</title>
-
+<title>Supabase Test</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 </head>
 
 <body>
 
-<h2>Join Influencertech Referral Program</h2>
+<h2>Supabase Connection Test</h2>
 
-<input id="phone" placeholder="Phone Number"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-
-<button onclick="registerUser()">Register</button>
+<button onclick="testInsert()">Test Insert</button>
 
 <script>
 
@@ -24,31 +19,17 @@ const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
 const { createClient } = supabase
 const client = createClient(supabaseUrl, supabaseKey)
 
-async function registerUser(){
-
-let phone = document.getElementById("phone").value
-let password = document.getElementById("password").value
-
-let code = "INF" + Math.floor(Math.random()*10000)
+async function testInsert(){
 
 const { data, error } = await client
 .from("referral_users")
-.insert([
-{
-phone: phone,
-password: password,
-referral_code: code,
-referrals: 0,
-earnings: 0
-}
-])
+.insert([{ phone: "TEST123", password: "1234", referral_code: "TEST", referrals: 0, earnings: 0 }])
 
 if(error){
-alert(error.message)
-return
+alert("Error: " + error.message)
+}else{
+alert("SUCCESS! Database connected.")
 }
-
-alert("Account created successfully!")
 
 }
 
