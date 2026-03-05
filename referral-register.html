@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Influencertech Referral</title>
+<title>Influencertech Referral Program</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -12,48 +12,51 @@ display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-margin:0;
 }
 
 .box{
 background:white;
-padding:35px;
+padding:30px;
 border-radius:12px;
 width:320px;
-box-shadow:0 6px 15px rgba(0,0,0,0.2);
 text-align:center;
+box-shadow:0 6px 20px rgba(0,0,0,0.2);
 }
 
 input{
 width:90%;
 padding:10px;
-margin:8px 0;
+margin:10px 0;
 border:1px solid #ccc;
-border-radius:5px;
+border-radius:6px;
 }
 
 button{
-padding:10px 15px;
-margin:5px;
+padding:10px 18px;
 border:none;
-border-radius:5px;
-color:white;
+border-radius:6px;
 cursor:pointer;
+color:white;
+margin:5px;
 }
 
-.register{background:#2563eb;}
-.login{background:#16a34a;}
-</style>
+.register{
+background:#2563eb;
+}
 
+.login{
+background:#16a34a;
+}
+</style>
 </head>
 
 <body>
 
 <div class="box">
 
-<h3>Influencertech Referral</h3>
+<h2>Join Influencertech Referral Program</h2>
 
-<input id="phone" placeholder="Phone Number">
+<input id="phone" placeholder="Phone number">
 <input id="password" type="password" placeholder="Password">
 
 <br>
@@ -65,60 +68,23 @@ cursor:pointer;
 
 <script>
 
-const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
-const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+const supabaseUrl="https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey="sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const { createClient } = supabase
-const client = createClient(supabaseUrl, supabaseKey)
+const {createClient}=supabase
+const db=createClient(supabaseUrl,supabaseKey)
+
 
 async function registerUser(){
 
-let phone = document.getElementById("phone").value.trim()
-let password = document.getElementById("password").value.trim()
+let phone=document.getElementById("phone").value
+let password=document.getElementById("password").value
 
 if(!phone || !password){
 alert("Enter phone and password")
 return
 }
 
-let code = "INF" + Math.floor(Math.random()*10000)
+let code="INF"+Math.floor(Math.random()*10000)
 
-const { error } = await client
-.from("referral_users")
-.insert([{ phone: phone, password: password, referral_code: code, referrals: 0, earnings: 0 }])
-
-if(error){
-alert(error.message)
-}else{
-alert("Account created. Now login.")
-}
-
-}
-
-async function loginUser(){
-
-let phone = document.getElementById("phone").value.trim()
-let password = document.getElementById("password").value.trim()
-
-const { data, error } = await client
-.from("referral_users")
-.select("*")
-.eq("phone", phone)
-.eq("password", password)
-.single()
-
-if(error){
-alert("Wrong login details")
-return
-}
-
-localStorage.setItem("user_phone", phone)
-
-window.location.href="referral-dashboard.html"
-
-}
-
-</script>
-
-</body>
-</html>
+const {error}=
