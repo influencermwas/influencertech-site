@@ -1,18 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Referral Registration</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Referral Registration</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+text-align:center;
+margin-top:80px;
+background:#f4f4f4;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+width:300px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+margin:5px;
+}
+
+.register{
+background:#2563eb;
+color:white;
+}
+
+.login{
+background:#16a34a;
+color:white;
+}
+
+</style>
+
 </head>
 
 <body>
 
+<div class="container">
+
 <h2>Join Influencertech Referral Program</h2>
 
-<input id="phone" placeholder="Phone Number"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
+<input id="phone" placeholder="Phone Number"><br>
+<input id="password" type="password" placeholder="Password"><br>
 
-<button onclick="registerUser()">Register</button>
+<button class="register" onclick="registerUser()">Register</button>
+
+<a href="referral-login.html">
+<button class="login">Login</button>
+</a>
+
+</div>
 
 <script>
 
@@ -24,33 +80,36 @@ const supabaseClient = createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
-  let phone = document.getElementById("phone").value
-  let password = document.getElementById("password").value
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
 
-  if(!phone || !password){
-    alert("Enter phone and password")
-    return
-  }
+if(!phone || !password){
+alert("Enter phone and password")
+return
+}
 
-  let code = "INF" + Math.floor(Math.random()*10000)
+let code = "INF" + Math.floor(Math.random()*10000)
 
-  const { error } = await supabaseClient
-  .from("referral_users")
-  .insert([
-    {
-      phone: phone,
-      password: password,
-      referral_code: code,
-      referrals: 0,
-      earnings: 0
-    }
-  ])
+const { error } = await supabaseClient
+.from("referral_users")
+.insert([
+{
+phone: phone,
+password: password,
+referral_code: code,
+referrals: 0,
+earnings: 0
+}
+])
 
-  if(error){
-    alert(error.message)
-  } else {
-    alert("Account created successfully!")
-  }
+if(error){
+alert(error.message)
+return
+}
+
+alert("Account created successfully! Now login.")
+
+window.location.href = "referral-login.html"
 
 }
 
