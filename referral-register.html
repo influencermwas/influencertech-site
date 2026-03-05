@@ -2,7 +2,9 @@
 <html>
 <head>
 <title>Influencertech Referral Program</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Correct Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <style>
 body{
@@ -40,13 +42,8 @@ color:white;
 margin:5px;
 }
 
-.register{
-background:#2563eb;
-}
-
-.login{
-background:#16a34a;
-}
+.register{background:#2563eb;}
+.login{background:#16a34a;}
 </style>
 </head>
 
@@ -68,23 +65,59 @@ background:#16a34a;
 
 <script>
 
-const supabaseUrl="https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey="sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const {createClient}=supabase
-const db=createClient(supabaseUrl,supabaseKey)
-
+const db = supabase.createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
-let phone=document.getElementById("phone").value
-let password=document.getElementById("password").value
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
 
 if(!phone || !password){
 alert("Enter phone and password")
 return
 }
 
-let code="INF"+Math.floor(Math.random()*10000)
+let code = "INF" + Math.floor(Math.random()*10000)
 
-const {error}=
+const { error } = await db
+.from("referral_users")
+.insert([{ phone, password, referral_code: code, referrals:0, earnings:0 }])
+
+if(error){
+alert("User already exists. Please login.")
+}else{
+alert("Account created successfully")
+}
+
+}
+
+async function loginUser(){
+
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
+
+const { data, error } = await db
+.from("referral_users")
+.select("*")
+.eq("phone", phone)
+.eq("password", password)
+.single()
+
+if(error){
+alert("Wrong login details")
+return
+}
+
+localStorage.setItem("user_phone", phone)
+
+window.location.href="referral-dashboard.html"
+
+}
+
+</script>
+
+</body>
+</html>
