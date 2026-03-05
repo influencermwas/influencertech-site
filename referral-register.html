@@ -50,7 +50,7 @@ margin:5px;
 
 <div class="box">
 
-<h2>Influencertech Referral</h2>
+<h2>Join Influencertech Referral Program</h2>
 
 <input id="phone" placeholder="Phone number">
 <input id="password" type="password" placeholder="Password">
@@ -64,10 +64,10 @@ margin:5px;
 
 <script>
 
-const supabaseUrl="https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey="sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const db=supabase.createClient(supabaseUrl,supabaseKey)
+const db = supabase.createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
@@ -80,17 +80,12 @@ return
 }
 
 // check if user already exists
-const {data:existingUser,error:checkError}=await db
+const {data}=await db
 .from("referral_users")
 .select("phone")
 .eq("phone",phone)
 
-if(checkError){
-alert(checkError.message)
-return
-}
-
-if(existingUser.length>0){
+if(data.length>0){
 alert("User already exists. Please login.")
 return
 }
@@ -111,10 +106,9 @@ earnings:0
 
 if(error){
 alert(error.message)
-return
-}
-
+}else{
 alert("Account created successfully")
+}
 
 }
 
