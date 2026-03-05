@@ -1,137 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Influencertech Referral Program</title>
+<title>Referral Registration</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 body{
-font-family:Arial;
+font-family: Arial, sans-serif;
+text-align:center;
+margin-top:80px;
 background:#f4f4f4;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
 }
 
-.box{
+.container{
 background:white;
 padding:30px;
-border-radius:12px;
-width:320px;
-text-align:center;
-box-shadow:0 6px 20px rgba(0,0,0,0.2);
+border-radius:10px;
+width:300px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 input{
 width:90%;
 padding:10px;
 margin:10px 0;
+border-radius:5px;
 border:1px solid #ccc;
-border-radius:6px;
 }
 
 button{
-padding:10px 18px;
+padding:10px 20px;
 border:none;
-border-radius:6px;
+border-radius:5px;
 cursor:pointer;
-color:white;
 margin:5px;
 }
 
-.register{background:#2563eb;}
-.login{background:#16a34a;}
+.register{
+background:#2563eb;
+color:white;
+}
+
+.login{
+background:#16a34a;
+color:white;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
 <h2>Join Influencertech Referral Program</h2>
 
-<input id="phone" placeholder="Phone number">
-<input id="password" type="password" placeholder="Password">
-
-<br>
+<input id="phone" placeholder="Phone Number"><br>
+<input id="password" type="password" placeholder="Password"><br>
 
 <button class="register" onclick="registerUser()">Register</button>
-<button class="login" onclick="loginUser()">Login</button>
+
+<a href="referral-login.html">
+<button class="login">Login</button>
+</a>
 
 </div>
 
 <script>
 
-const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const db = supabase.createClient(supabaseUrl, supabaseKey)
+const { createClient } = supabase
+const supabaseClient = createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
-let phone=document.getElementById("phone").value
-let password=document.getElementById("password").value
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
 
 if(!phone || !password){
 alert("Enter phone and password")
 return
 }
 
-// check if user already exists
-const {data}=await db
-.from("referral_users")
-.select("phone")
-.eq("phone",phone)
+let code = "INF" + Math.floor(Math.random()*10000)
 
-if(data.length>0){
-alert("User already exists. Please login.")
-return
-}
-
-let code="INF"+Math.floor(Math.random()*10000)
-
-const {error}=await db
+const { error } = await supabaseClient
 .from("referral_users")
 .insert([
 {
-phone:phone,
-password:password,
-referral_code:code,
-referrals:0,
-earnings:0
+phone: phone,
+password: password,
+referral_code: code,
+referrals: 0,
+earnings: 0
 }
 ])
 
 if(error){
 alert(error.message)
-}else{
-alert("Account created successfully")
-}
-
-}
-
-async function loginUser(){
-
-let phone=document.getElementById("phone").value
-let password=document.getElementById("password").value
-
-const {data,error}=await db
-.from("referral_users")
-.select("*")
-.eq("phone",phone)
-.eq("password",password)
-.single()
-
-if(error){
-alert("Wrong login details")
 return
 }
 
-localStorage.setItem("user_phone",phone)
+alert("Account created successfully! Now login.")
 
-window.location.href="referral-dashboard.html"
+window.location.href = "referral-login.html"
 
 }
 
