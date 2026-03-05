@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Influencertech Data Solutions</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+body{
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+}
+
+header{
+background:#111827;
+color:white;
+padding:28px;
+text-align:center;
+}
+
+header h1{
+margin:0;
+font-size:28px;
+}
+
+/* scrolling message bar */
+.marquee-bar{
+background:#1f2937;
+color:white;
+padding:10px;
+font-weight:bold;
+font-size:14px;
+text-align:center;
+}
+
+section{
+padding:40px 20px;
+max-width:900px;
+margin:auto;
+}
+
+.hero{
+background:white;
+border-radius:16px;
+padding:40px;
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
+text-align:center;
+}
+
+.buttons{
+display:grid;
+grid-template-columns:1fr;
+gap:25px;
+margin-top:30px;
+}
+
+.big-btn{
+display:flex;
+align-items:center;
+gap:18px;
+text-decoration:none;
+color:white;
+padding:22px;
+border-radius:16px;
+font-size:18px;
+font-weight:bold;
+line-height:1.4;
+transition:all .25s ease;
+box-shadow:0 10px 22px rgba(0,0,0,0.25);
+}
+
+.big-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 14px 28px rgba(0,0,0,0.35);
+}
+
+.data-card{
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.sms-card{
+background:linear-gradient(135deg,#16a34a,#15803d);
+}
+
+.minutes-card{
+background:linear-gradient(135deg,#f97316,#ea580c);
+}
+
+.icon{
+width:60px;
+height:60px;
+flex-shrink:0;
+background:white;
+border-radius:12px;
+padding:6px;
+}
+
+.text-group{
+text-align:left;
+}
+
+.text-group small{
+display:block;
+font-weight:normal;
+color:#e5e7eb;
+margin-top:4px;
+}
+
+.whatsapp-float{
+position:fixed;
+bottom:25px;
+right:25px;
+background:#25D366;
+color:white;
+border-radius:30px;
+padding:14px 18px;
+font-size:16px;
+font-weight:bold;
+text-decoration:none;
+box-shadow:0 6px 14px rgba(0,0,0,0.3);
+z-index:1000;
+}
+
+footer{
+background:#111827;
+color:#cbd5e1;
+text-align:center;
+padding:20px;
+margin-top:40px;
+font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Influencertech Data Solutions</h1>
+<p>Select a service below</p>
+</header>
+
+<div class="marquee-bar">
+<marquee>🔥 Bingwa Sokoni Bundles Till 8396206 | SMS Offers Till 4321426 | Minutes Offers Till 7671453 | Fast & Reliable Service 🔥</marquee>
+</div>
+
+<section>
+<div class="hero">
+
+<div class="buttons">
+
+<a class="big-btn data-card" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/wifi.png" alt="Internet Bundles">
+<div class="text-group">
+Bingwa Sokoni Bundles
+<small>Till 8396206</small>
+</div>
+</a>
+
+<a class="big-btn sms-card" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/sms.png" alt="SMS Offers">
+<div class="text-group">
+SMS Offers
+<small>Till 4321426</small>
+</div>
+</a>
+
+<a class="big-btn minutes-card" href="https://bingwahybrid.com/influencertech">
+<img class="icon" src="https://img.icons8.com/color/96/phone.png" alt="Minutes Offers">
+<div class="text-group">
+Minutes Offers
+<small>Till 7671453</small>
+</div>
+</a>
+
+</div>
+
+</div>
+</section>
+
+<footer>
+<p>© 2026 Influencertech Data Solutions</p>
+</footer>
+
+
+
+
+<button id="installApp" class="install-btn">Install App</button>
+
+<script>
+let deferredPrompt;
+const installBtn = document.getElementById('installApp');
+installBtn.style.display = 'none';
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+});
+</script>
+
+<style>
+.install-btn{
+position:fixed;
+bottom:160px;
+right:25px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:25px;
+padding:12px 18px;
+font-weight:bold;
+box-shadow:0 6px 14px rgba(0,0,0,0.3);
+cursor:pointer;
+z-index:1000;
+}
+}
+</style>
+
+
+
+<div id="supportBox" class="support-box">
+  <div class="support-header">Support</div>
+  <div class="support-body">
+    <p>Hello 👋<br>How can we help you today?</p>
+    <a href="https://wa.me/254746975939" target="_blank" class="support-chat-btn">Start WhatsApp Chat</a>
+  </div>
+</div>
+
+<style>
+.support-box{
+position:fixed;
+right:20px;
+bottom:80px;
+width:180px;
+background:white;
+border-radius:10px;
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+font-family:Arial,Helvetica,sans-serif;
+z-index:1000;
+overflow:hidden;
+}
+}
+}
+
+.support-header{
+background:#2563eb;
+color:white;
+padding:10px;
+font-weight:bold;
+text-align:center;
+}
+
+.support-body{
+padding:12px;
+font-size:14px;
+color:#333;
+}
+
+.support-chat-btn{
+display:block;
+margin-top:10px;
+background:#25D366;
+color:white;
+text-decoration:none;
+padding:8px;
+border-radius:6px;
+text-align:center;
+font-weight:bold;
+}
+
+.support-chat-btn:hover{
+background:#1ebe5d;
+}
+</style>
+
+</body>
+</html>
