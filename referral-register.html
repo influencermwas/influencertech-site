@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>Referral Registration</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,21 +21,17 @@
 const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+const { createClient } = supabase
+const client = createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
 let phone = document.getElementById("phone").value
 let password = document.getElementById("password").value
 
-if(!phone || !password){
-alert("Please enter phone and password")
-return
-}
-
 let code = "INF" + Math.floor(Math.random()*10000)
 
-const { error } = await supabaseClient
+const { data, error } = await client
 .from("referral_users")
 .insert([
 {
@@ -53,7 +48,7 @@ alert(error.message)
 return
 }
 
-alert("Account created! Your referral code: " + code)
+alert("Account created successfully!")
 
 }
 
