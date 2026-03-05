@@ -2,48 +2,52 @@
 <html>
 <head>
 <title>Referral Login</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-<h2>Referral Login</h2>
+<h2>Influencertech Referral Login</h2>
 
 <input id="phone" placeholder="Phone Number"><br><br>
 <input id="password" type="password" placeholder="Password"><br><br>
 
-<button onclick="login()">Login</button>
+<button onclick="loginUser()">Login</button>
 
 <script>
 
-const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+const { createClient } = supabase
+const supabaseClient = createClient(supabaseUrl, supabaseKey)
 
-async function login(){
+async function loginUser(){
 
 let phone = document.getElementById("phone").value
 let password = document.getElementById("password").value
 
-const { data, error } = await supabase
-.from('referral_users')
+const { data, error } = await supabaseClient
+.from("referral_users")
 .select("*")
 .eq("phone", phone)
 .eq("password", password)
-.single()
 
 if(error){
+alert("Login error")
+return
+}
 
-alert("Invalid login")
+if(data.length === 0){
+alert("Invalid phone or password")
+return
+}
 
-}else{
+alert("Login successful!")
 
-localStorage.setItem("refUser", JSON.stringify(data))
+localStorage.setItem("referralUser", phone)
 
 window.location.href = "referral-dashboard.html"
-
-}
 
 }
 
