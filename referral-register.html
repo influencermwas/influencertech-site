@@ -22,21 +22,21 @@
 const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
 
-const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
 async function registerUser(){
 
 const phone = document.getElementById("phone").value
 const password = document.getElementById("password").value
 
-if(phone === "" || password === ""){
+if(!phone || !password){
 alert("Please enter phone and password")
 return
 }
 
 let code = "INF" + Math.floor(Math.random()*10000)
 
-const { error } = await supabaseClient
+const { error } = await supabase
 .from("referral_users")
 .insert([
 {
@@ -54,8 +54,6 @@ return
 }
 
 alert("Account created! Your referral code is " + code)
-
-window.location.href = "referral-login.html"
 
 }
 
