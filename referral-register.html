@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Referral Registration</title>
+</head>
+
+<body>
+
+<h2>Join Influencertech Referral Program</h2>
+
+<input id="phone" placeholder="Phone Number"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="registerUser()">Register</button>
+
+<script>
+
+function registerUser(){
+
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
+
+if(phone === "" || password === ""){
+alert("Please enter phone and password")
+return
+}
+
+alert("Button works! Phone: " + phone)
+
+}
+
+</script>
+
+</body>
+</html>
