@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Referral Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+
+<body>
+
+<h2>Influencertech Referral Dashboard</h2>
+
+<p><b>Your Referral Code:</b> <span id="code"></span></p>
+
+<p><b>Your Referral Link:</b></p>
+<input id="refLink" style="width:350px">
+
+<br><br>
+
+<p><b>Total Referrals:</b> <span id="referrals"></span></p>
+
+<p><b>Total Earnings:</b> KES <span id="earnings"></span></p>
+
+<br>
+
+<button onclick="withdraw()">Withdraw via M-Pesa</button>
+
+<script>
+
+const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
+
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+let user = JSON.parse(localStorage.getItem("refUser"))
+
+document.getElementById("code").innerText = user.referral_code
+document.getElementById("referrals").innerText = user.referrals
+document.getElementById("earnings").innerText = user.earnings
+
+let link = "https://influencertechdatasolution.com/?ref=" + user.referral_code
+document.getElementById("refLink").value = link
+
+function withdraw(){
+
+if(user.earnings < 100){
+
+alert("Minimum withdrawal is KES 100")
+
+}else{
+
+alert("Withdrawal request sent. We will pay via M-Pesa.")
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
