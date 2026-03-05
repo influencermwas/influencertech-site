@@ -1,63 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-<title>Referral Registration</title>
-
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-</head>
-
-<body>
-
-<h2>Join Influencertech Referral Program</h2>
-
-<input id="phone" placeholder="Phone Number"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-
-<button onclick="registerUser()">Register</button>
-
 <script>
 
-const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
+function registerUser(){
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
 
-async function registerUser(){
-
-const phone = document.getElementById("phone").value
-const password = document.getElementById("password").value
-
-if(!phone || !password){
-alert("Please enter phone and password")
-return
-}
-
-let code = "INF" + Math.floor(Math.random()*10000)
-
-const { error } = await supabase
-.from("referral_users")
-.insert([
-{
-phone: phone,
-password: password,
-referral_code: code,
-referrals: 0,
-earnings: 0
-}
-])
-
-if(error){
-alert("Error: " + error.message)
-return
-}
-
-alert("Account created! Your referral code is " + code)
+alert("Button works. Phone: " + phone)
 
 }
 
 </script>
-
-</body>
-</html>
