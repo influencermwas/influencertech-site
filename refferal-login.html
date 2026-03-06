@@ -43,15 +43,11 @@ alert("Wrong login details")
 return
 }
 
-// 🔥 Save session BEFORE redirect
+// Save session
 localStorage.setItem("user_phone", phone)
 
-// 🔥 Force save confirmation
-if(localStorage.getItem("user_phone") === phone){
-window.location.href = "referral-dashboard.html"
-} else {
-alert("Session failed to save.")
-}
+// Use FULL URL redirect
+window.location.href = "https://influencertechdatasolution.com/referral-dashboard.html"
 
 }
 
