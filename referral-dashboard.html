@@ -2,57 +2,76 @@
 <html>
 <head>
 <title>Referral Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 
-<body>
+<body style="font-family:Arial;text-align:center;margin-top:60px;">
 
-<h2>Influencertech Referral Dashboard</h2>
+<h2>Referral Dashboard</h2>
 
-<p><b>Your Referral Code:</b> <span id="code"></span></p>
+<div id="loading">Loading...</div>
 
-<p><b>Your Referral Link:</b></p>
-<input id="refLink" style="width:350px">
+<div id="dashboard" style="display:none;">
 
-<br><br>
+<p><strong>Phone:</strong> <span id="userPhone"></span></p>
+<p><strong>Referral Code:</strong> <span id="refCode"></span></p>
+<p><strong>Total Referrals:</strong> <span id="refCount"></span></p>
+<p><strong>Earnings (KES):</strong> <span id="earnings"></span></p>
 
-<p><b>Total Referrals:</b> <span id="referrals"></span></p>
-
-<p><b>Total Earnings:</b> KES <span id="earnings"></span></p>
+<p><strong>Your Referral Link:</strong></p>
+<p id="refLink" style="word-break:break-all;"></p>
 
 <br>
+<button onclick="logout()">Logout</button>
 
-<button onclick="withdraw()">Withdraw via M-Pesa</button>
+</div>
 
 <script>
 
-const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey = "sb_publishable_2HLZ4B0XlatCHE_PBhXAmw_akGNlxIJ"
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+const db = supabase.createClient(supabaseUrl, supabaseKey)
 
-let user = JSON.parse(localStorage.getItem("refUser"))
+async function loadDashboard(){
 
-document.getElementById("code").innerText = user.referral_code
-document.getElementById("referrals").innerText = user.referrals
-document.getElementById("earnings").innerText = user.earnings
+let phone = localStorage.getItem("user_phone")
 
-let link = "https://influencertechdatasolution.com/?ref=" + user.referral_code
-document.getElementById("refLink").value = link
+if(!phone){
+window.location.href = "referral-login.html"
+return
+}
 
-function withdraw(){
+const { data, error } = await db
+.from("referral_users")
+.select("*")
+.eq("phone", phone)
+.single()
 
-if(user.earnings < 100){
+if(error){
+alert("Error loading dashboard")
+return
+}
 
-alert("Minimum withdrawal is KES 100")
+document.getElementById("userPhone").innerText = data.phone
+document.getElementById("refCode").innerText = data.referral_code
+document.getElementById("refCount").innerText = data.referrals
+document.getElementById("earnings").innerText = data.earnings
 
-}else{
+let link = window.location.origin + "/referral-register.html?ref=" + data.referral_code
+document.getElementById("refLink").innerText = link
 
-alert("Withdrawal request sent. We will pay via M-Pesa.")
+document.getElementById("loading").style.display = "none"
+document.getElementById("dashboard").style.display = "block"
 
 }
 
+function logout(){
+localStorage.removeItem("user_phone")
+window.location.href = "referral-login.html"
 }
+
+loadDashboard()
 
 </script>
 
