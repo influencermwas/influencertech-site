@@ -38,14 +38,22 @@ const { data, error } = await db
 .eq("password", password)
 .single()
 
-if(error){
+if(error || !data){
 alert("Wrong login details")
 return
 }
 
+// Save session
 localStorage.setItem("user_phone", phone)
 
+// Confirm it saved before redirecting
+let saved = localStorage.getItem("user_phone")
+
+if(saved){
 window.location.href = "referral-dashboard.html"
+}else{
+alert("Session error. Try again.")
+}
 
 }
 
