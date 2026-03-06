@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Referral Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:100px;">
+
+<h2>Referral Login</h2>
+
+<input id="phone" placeholder="Phone number"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="loginUser()">Login</button>
+
+<script>
+
+const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
+const supabaseKey = "YOUR_PUBLIC_ANON_KEY"
+
+const db = supabase.createClient(supabaseUrl, supabaseKey)
+
+async function loginUser(){
+
+let phone = document.getElementById("phone").value
+let password = document.getElementById("password").value
+
+const { data, error } = await db
+.from("referral_users")
+.select("*")
+.eq("phone", phone)
+.eq("password", password)
+.single()
+
+if(error){
+alert("Wrong login details")
+return
+}
+
+localStorage.setItem("user_phone", phone)
+
+window.location.href = "referral-dashboard.html"
+
+}
+
+</script>
+
+</body>
+</html>
