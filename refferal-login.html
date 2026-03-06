@@ -16,8 +16,8 @@
 
 <script>
 
-const supabaseUrl = "https://ihedsiltqrbqwnouone.supabase.co"
-const supabaseKey = "YOUR_PUBLIC_ANON_KEY"
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 
 const db = supabase.createClient(supabaseUrl, supabaseKey)
 
@@ -25,6 +25,11 @@ async function loginUser(){
 
 let phone = document.getElementById("phone").value
 let password = document.getElementById("password").value
+
+if(!phone || !password){
+alert("Enter phone and password")
+return
+}
 
 const { data, error } = await db
 .from("referral_users")
