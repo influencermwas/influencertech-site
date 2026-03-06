@@ -43,16 +43,14 @@ alert("Wrong login details")
 return
 }
 
-// Save session
+// 🔥 Save session BEFORE redirect
 localStorage.setItem("user_phone", phone)
 
-// Confirm it saved before redirecting
-let saved = localStorage.getItem("user_phone")
-
-if(saved){
+// 🔥 Force save confirmation
+if(localStorage.getItem("user_phone") === phone){
 window.location.href = "referral-dashboard.html"
-}else{
-alert("Session error. Try again.")
+} else {
+alert("Session failed to save.")
 }
 
 }
