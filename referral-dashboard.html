@@ -9,22 +9,12 @@
 
 <h2>Referral Dashboard</h2>
 
-<div id="loading">Loading...</div>
-
-<div id="dashboard" style="display:none;">
-
-<p><strong>Phone:</strong> <span id="userPhone"></span></p>
-<p><strong>Referral Code:</strong> <span id="refCode"></span></p>
-<p><strong>Total Referrals:</strong> <span id="refCount"></span></p>
-<p><strong>Earnings (KES):</strong> <span id="earnings"></span></p>
-
-<p><strong>Your Referral Link:</strong></p>
-<p id="refLink" style="word-break:break-all;"></p>
+<div id="content">
+Loading...
+</div>
 
 <br>
 <button onclick="logout()">Logout</button>
-
-</div>
 
 <script>
 
@@ -38,6 +28,7 @@ async function loadDashboard(){
 let phone = localStorage.getItem("user_phone")
 
 if(!phone){
+alert("Session expired. Please login again.")
 window.location.href = "referral-login.html"
 return
 }
@@ -48,21 +39,22 @@ const { data, error } = await db
 .eq("phone", phone)
 .single()
 
-if(error){
-alert("Error loading dashboard")
+if(error || !data){
+alert("User not found. Please login again.")
+localStorage.removeItem("user_phone")
+window.location.href = "referral-login.html"
 return
 }
 
-document.getElementById("userPhone").innerText = data.phone
-document.getElementById("refCode").innerText = data.referral_code
-document.getElementById("refCount").innerText = data.referrals
-document.getElementById("earnings").innerText = data.earnings
-
-let link = window.location.origin + "/referral-register.html?ref=" + data.referral_code
-document.getElementById("refLink").innerText = link
-
-document.getElementById("loading").style.display = "none"
-document.getElementById("dashboard").style.display = "block"
+document.getElementById("content").innerHTML = `
+<p><strong>Phone:</strong> ${data.phone}</p>
+<p><strong>Referral Code:</strong> ${data.referral_code}</p>
+<p><strong>Total Referrals:</strong> ${data.referrals}</p>
+<p><strong>Earnings (KES):</strong> ${data.earnings}</p>
+<p><strong>Your Referral Link:</strong><br>
+${window.location.origin}/referral-register.html?ref=${data.referral_code}
+</p>
+`
 
 }
 
