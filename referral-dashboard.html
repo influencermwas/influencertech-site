@@ -9,9 +9,7 @@
 
 <h2>Referral Dashboard</h2>
 
-<div id="content">
-Loading...
-</div>
+<div id="content">Loading...</div>
 
 <br>
 <button onclick="logout()">Logout</button>
@@ -28,8 +26,7 @@ async function loadDashboard(){
 let phone = localStorage.getItem("user_phone")
 
 if(!phone){
-alert("Session expired. Please login again.")
-window.location.href = "referral-login.html"
+window.location.href = "https://influencertechdatasolution.com/referral-login.html"
 return
 }
 
@@ -40,9 +37,8 @@ const { data, error } = await db
 .single()
 
 if(error || !data){
-alert("User not found. Please login again.")
 localStorage.removeItem("user_phone")
-window.location.href = "referral-login.html"
+window.location.href = "https://influencertechdatasolution.com/referral-login.html"
 return
 }
 
@@ -52,7 +48,7 @@ document.getElementById("content").innerHTML = `
 <p><strong>Total Referrals:</strong> ${data.referrals}</p>
 <p><strong>Earnings (KES):</strong> ${data.earnings}</p>
 <p><strong>Your Referral Link:</strong><br>
-${window.location.origin}/referral-register.html?ref=${data.referral_code}
+https://influencertechdatasolution.com/referral-register.html?ref=${data.referral_code}
 </p>
 `
 
@@ -60,7 +56,7 @@ ${window.location.origin}/referral-register.html?ref=${data.referral_code}
 
 function logout(){
 localStorage.removeItem("user_phone")
-window.location.href = "referral-login.html"
+window.location.href = "https://influencertechdatasolution.com/referral-login.html"
 }
 
 loadDashboard()
