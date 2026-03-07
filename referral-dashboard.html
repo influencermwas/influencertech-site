@@ -26,7 +26,7 @@ async function loadDashboard(){
 let phone = localStorage.getItem("user_phone")
 
 if(!phone){
-window.location.href = "https://influencertechdatasolution.com/referral-login.html"
+window.location.href = "/referral-login"
 return
 }
 
@@ -38,7 +38,7 @@ const { data, error } = await db
 
 if(error || !data){
 localStorage.removeItem("user_phone")
-window.location.href = "https://influencertechdatasolution.com/referral-login.html"
+window.location.href = "/referral-login"
 return
 }
 
@@ -48,7 +48,7 @@ document.getElementById("content").innerHTML = `
 <p><strong>Total Referrals:</strong> ${data.referrals}</p>
 <p><strong>Earnings (KES):</strong> ${data.earnings}</p>
 <p><strong>Your Referral Link:</strong><br>
-https://influencertechdatasolution.com/referral-register.html?ref=${data.referral_code}
+${window.location.origin}/referral-register?ref=${data.referral_code}
 </p>
 `
 
@@ -56,7 +56,7 @@ https://influencertechdatasolution.com/referral-register.html?ref=${data.referra
 
 function logout(){
 localStorage.removeItem("user_phone")
-window.location.href = "https://influencertechdatasolution.com/referral-login.html"
+window.location.href = "/referral-login"
 }
 
 loadDashboard()
