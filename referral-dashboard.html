@@ -10,7 +10,8 @@
 <h2>Referral Dashboard</h2>
 
 <div id="content">Loading...</div>
-<br>
+
+<br><br>
 <button onclick="logout()">Logout</button>
 
 <script>
@@ -22,10 +23,10 @@ const db = supabase.createClient(supabaseUrl, supabaseKey)
 
 async function loadDashboard(){
 
-let phone = localStorage.getItem("user_phone")
+let phone = localStorage.getItem("referral_user")
 
 if(!phone){
-window.location.href = "referral-login.html"
+window.location.href = "/referral-login"
 return
 }
 
@@ -36,8 +37,8 @@ const { data, error } = await db
 .single()
 
 if(error || !data){
-localStorage.removeItem("user_phone")
-window.location.href = "referral-login.html"
+localStorage.removeItem("referral_user")
+window.location.href = "/referral-login"
 return
 }
 
@@ -46,13 +47,16 @@ document.getElementById("content").innerHTML = `
 <p><strong>Referral Code:</strong> ${data.referral_code}</p>
 <p><strong>Total Referrals:</strong> ${data.referrals}</p>
 <p><strong>Earnings:</strong> ${data.earnings}</p>
+<p><strong>Your Referral Link:</strong><br>
+${window.location.origin}/referral-register?ref=${data.referral_code}
+</p>
 `
 
 }
 
 function logout(){
-localStorage.removeItem("user_phone")
-window.location.href = "referral-login.html"
+localStorage.removeItem("referral_user")
+window.location.href = "/referral-login"
 }
 
 loadDashboard()
