@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Referral Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:60px;">
+
+<h2>Referral Dashboard</h2>
+
+<div id="content">Loading...</div>
+
+<br><br>
+<button onclick="logout()">Logout</button>
+
+<script>
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+async function loadDashboard() {
+  const phone = localStorage.getItem("referral_phone")
+
+  if (!phone) {
+    window.location.href = "/referral-login"
+    return
+  }
+
+  const { data, error } = await supabase
+    .from("referral_users")
+    .select("*")
+    .eq("phone", phone)
+    .single()
+
+  if (error || !data) {
+    localStorage.removeItem("referral_phone")
+    window.location.href = "/referral-login"
+    return
+  }
+
+  document.getElementById("content").innerHTML = `
+    <p><strong>Phone:</strong> ${data.phone}</p>
+    <p><strong>Referral Code:</strong> ${data.referral_code}</p>
+    <p><strong>Total Referrals:</strong> ${data.referrals}</p>
+    <p><strong>Earnings:</strong> ${data.earnings}</p>
+  `
+}
+
+function logout() {
+  localStorage.removeItem("referral_phone")
+  window.location.href = "/referral-login"
+}
+
+loadDashboard()
+</script>
+
+</body>
+</html>
