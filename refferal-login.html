@@ -26,11 +26,6 @@ async function loginUser(){
 let phone = document.getElementById("phone").value.trim()
 let password = document.getElementById("password").value.trim()
 
-if(!phone || !password){
-alert("Enter phone and password")
-return
-}
-
 const { data, error } = await db
 .from("referral_users")
 .select("*")
@@ -43,11 +38,10 @@ alert("Wrong login details")
 return
 }
 
-// Save session
 localStorage.setItem("user_phone", phone)
 
-// Clean route redirect (NO .html)
-window.location.href = "/referral-dashboard"
+// use RELATIVE html file
+window.location.href = "referral-dashboard.html"
 
 }
 
