@@ -92,8 +92,8 @@ background:#1d4ed8;
 
 <h2>Buy Airtime</h2>
 
-<label>Paying Number</label>
-<input type="text" id="paying" placeholder="07XXXXXXXX">
+<label>Till Name</label>
+<input type="text" id="paying" placeholder="Enter till name">
 
 <label>Receiving Number</label>
 <input type="text" id="receiving" placeholder="07XXXXXXXX">
@@ -124,7 +124,6 @@ background:#1d4ed8;
 
 <script>
 
-/* CHANGE DAILY RATE HERE */
 const RATE = 0.90;
 
 function calculate(){
@@ -163,7 +162,7 @@ let receive = document.getElementById("receive").value;
 
 let message =
 "NEW AIRTIME ORDER%0A%0A" +
-"Paying Number: " + paying + "%0A" +
+"Till Name: " + paying + "%0A" +
 "Receiving Number: " + receiving + "%0A" +
 "Amount Paid: " + amount + "%0A" +
 "Airtime To Send: " + receive;
