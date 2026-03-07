@@ -117,7 +117,9 @@ background:#2563eb;
 
 function calculate(){
 
-let rate = localStorage.getItem("rate") || 0.90
+let ratePercent = parseFloat(localStorage.getItem("rate")) || 90
+
+let rate = ratePercent / 100
 
 let amount = document.getElementById("amount").value
 
