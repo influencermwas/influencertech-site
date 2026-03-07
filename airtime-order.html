@@ -28,10 +28,6 @@ text-align:center;
 box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
 
-h2{
-margin-top:0;
-}
-
 label{
 display:block;
 margin-top:15px;
@@ -71,19 +67,12 @@ font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-background:#16a34a;
-}
-
 .copy-btn{
 background:#2563eb;
 }
 
-.copy-btn:hover{
-background:#1d4ed8;
-}
-
 </style>
+
 </head>
 
 <body>
@@ -92,14 +81,16 @@ background:#1d4ed8;
 
 <h2>Buy Airtime</h2>
 
+<div id="stockMessage"></div>
+
 <label>Till Name</label>
-<input type="text" id="paying" placeholder="Enter till name">
+<input type="text" id="tillname" placeholder="Enter till name">
 
 <label>Receiving Number</label>
-<input type="text" id="receiving" placeholder="07XXXXXXXX">
+<input type="text" id="number" placeholder="07XXXXXXXX">
 
-<label>Amount Paid (KES)</label>
-<input type="number" id="amount" placeholder="Enter amount" oninput="calculate()">
+<label>Amount Paid</label>
+<input type="number" id="amount" oninput="calculate()">
 
 <label>To Receive</label>
 <input type="text" id="receive" readonly>
@@ -118,58 +109,117 @@ background:#1d4ed8;
 
 </div>
 
-<button onclick="sendWhatsApp()">Confirm Order</button>
+<button onclick="confirmOrder()">Confirm Order</button>
 
 </div>
 
 <script>
 
-const RATE = 0.897;
-
 function calculate(){
 
-let amount = document.getElementById("amount").value;
+let rate = localStorage.getItem("rate") || 0.90
+
+let amount = document.getElementById("amount").value
 
 if(amount <= 0){
-document.getElementById("receive").value="";
-return;
+
+document.getElementById("receive").value=""
+
+return
+
 }
 
-let airtime = amount / RATE;
+let airtime = amount / rate
 
-airtime = Math.round(airtime);
+airtime = Math.round(airtime)
 
-document.getElementById("receive").value = airtime;
+document.getElementById("receive").value = airtime
 
 }
 
 function copyTill(){
 
-let till = document.getElementById("till").innerText;
+let till = document.getElementById("till").innerText
 
-navigator.clipboard.writeText(till);
+navigator.clipboard.writeText(till)
 
-alert("Till number copied: " + till);
+alert("Till number copied: " + till)
 
 }
 
-function sendWhatsApp(){
+function confirmOrder(){
 
-let paying = document.getElementById("paying").value;
-let receiving = document.getElementById("receiving").value;
-let amount = document.getElementById("amount").value;
-let receive = document.getElementById("receive").value;
+let stockStatus = localStorage.getItem("stockStatus")
+
+if(stockStatus === "false"){
+
+alert("Airtime currently out of stock")
+
+return
+
+}
+
+let tillname = document.getElementById("tillname").value
+let number = document.getElementById("number").value
+let amount = document.getElementById("amount").value
+let airtime = document.getElementById("receive").value
+
+if(!tillname || !number || !amount){
+
+alert("Please fill all fields")
+
+return
+
+}
+
+let stock = parseInt(localStorage.getItem("stock") || 100000)
+
+if(stock < airtime){
+
+alert("Not enough airtime stock")
+
+return
+
+}
+
+stock = stock - airtime
+
+localStorage.setItem("stock",stock)
+
+let sales = parseInt(localStorage.getItem("sales") || 0)
+
+sales = sales + parseInt(amount)
+
+localStorage.setItem("sales",sales)
+
+let orders = JSON.parse(localStorage.getItem("orders") || "[]")
+
+orders.push({
+number:number,
+airtime:airtime
+})
+
+localStorage.setItem("orders",JSON.stringify(orders))
 
 let message =
-"NEW AIRTIME ORDER%0A%0A" +
-"Till Name: " + paying + "%0A" +
-"Receiving Number: " + receiving + "%0A" +
-"Amount Paid: " + amount + "%0A" +
-"Airtime To Send: " + receive;
+"NEW AIRTIME ORDER%0A%0A"+
+"Till Name: "+tillname+"%0A"+
+"Receiving Number: "+number+"%0A"+
+"Amount Paid: "+amount+"%0A"+
+"Airtime To Send: "+airtime
 
-let phone = "254746975939";
+let phone="254746975939"
 
-window.open("https://wa.me/" + phone + "?text=" + message);
+window.open("https://wa.me/"+phone+"?text="+message)
+
+}
+
+let stockStatus = localStorage.getItem("stockStatus")
+
+if(stockStatus === "false"){
+
+document.getElementById("stockMessage").innerHTML =
+"<h3 style='color:red'>⚠ Airtime Currently Out Of Stock</h3>"
 
 }
 
