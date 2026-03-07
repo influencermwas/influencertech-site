@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Referral Login</title>
+<title>Influencertech Referral</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 
-<body style="font-family:Arial;text-align:center;margin-top:100px;">
+<body style="font-family:Arial;text-align:center;margin-top:60px;">
 
-<h2>Influencertech Referral Login</h2>
+<h2>Influencertech Referral Program</h2>
+
+<div id="loginBox">
 
 <input id="phone" placeholder="Phone number"><br><br>
 <input id="password" type="password" placeholder="Password"><br><br>
 
 <button onclick="loginUser()">Login</button>
+
+</div>
+
+<div id="dashboardBox" style="display:none;">
+<h3>Welcome to Dashboard</h3>
+<div id="content"></div>
+<br>
+<button onclick="logout()">Logout</button>
+</div>
 
 <script>
 
@@ -24,6 +35,11 @@ async function loginUser(){
 
 let phone = document.getElementById("phone").value.trim()
 let password = document.getElementById("password").value.trim()
+
+if(!phone || !password){
+alert("Enter phone and password")
+return
+}
 
 const { data, error } = await db
 .from("referral_users")
@@ -37,11 +53,27 @@ alert("Wrong login details")
 return
 }
 
-alert("Login successful")
+// hide login
+document.getElementById("loginBox").style.display = "none"
 
-// PASS PHONE IN URL
-window.location.href = "/referral-dashboard?phone=" + phone
+// show dashboard
+document.getElementById("dashboardBox").style.display = "block"
 
+document.getElementById("content").innerHTML = `
+<p><strong>Phone:</strong> ${data.phone}</p>
+<p><strong>Referral Code:</strong> ${data.referral_code}</p>
+<p><strong>Total Referrals:</strong> ${data.referrals}</p>
+<p><strong>Earnings:</strong> ${data.earnings}</p>
+<p><strong>Your Referral Link:</strong><br>
+${window.location.origin}/referral-register?ref=${data.referral_code}
+</p>
+`
+
+}
+
+function logout(){
+document.getElementById("loginBox").style.display = "block"
+document.getElementById("dashboardBox").style.display = "none"
 }
 
 </script>
