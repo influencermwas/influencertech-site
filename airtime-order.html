@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buy Airtime</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 
 body{
@@ -81,8 +83,6 @@ background:#2563eb;
 
 <h2>Buy Airtime</h2>
 
-<div id="stockMessage"></div>
-
 <label>Till Name</label>
 <input type="text" id="tillname" placeholder="Enter till name">
 
@@ -115,11 +115,34 @@ background:#2563eb;
 
 <script>
 
+const supabase = window.supabase.createClient(
+"https://ihedsiltqrxbqwnouone.supabase.co",
+"sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+)
+
+let currentRate = 90
+let currentStock = 0
+let stockStatus = true
+
+async function loadSettings(){
+
+const { data } = await supabase
+.from("settings")
+.select("*")
+.eq("id",1)
+.single()
+
+currentRate = data.rate
+currentStock = data.stock
+stockStatus = data.stock_status
+
+}
+
+loadSettings()
+
 function calculate(){
 
-let ratePercent = parseFloat(localStorage.getItem("rate")) || 90
-
-let rate = ratePercent / 100
+let rate = currentRate / 100
 
 let amount = document.getElementById("amount").value
 
@@ -149,11 +172,9 @@ alert("Till number copied: " + till)
 
 }
 
-function confirmOrder(){
+async function confirmOrder(){
 
-let stockStatus = localStorage.getItem("stockStatus")
-
-if(stockStatus === "false"){
+if(!stockStatus){
 
 alert("Airtime currently out of stock")
 
@@ -174,9 +195,7 @@ return
 
 }
 
-let stock = parseInt(localStorage.getItem("stock") || 100000)
-
-if(stock < airtime){
+if(currentStock < airtime){
 
 alert("Not enough airtime stock")
 
@@ -184,24 +203,21 @@ return
 
 }
 
-stock = stock - airtime
+await supabase.from("orders").insert({
 
-localStorage.setItem("stock",stock)
+till_name:tillname,
+receiving_number:number,
+amount_paid:amount,
+airtime_sent:airtime
 
-let sales = parseInt(localStorage.getItem("sales") || 0)
-
-sales = sales + parseInt(amount)
-
-localStorage.setItem("sales",sales)
-
-let orders = JSON.parse(localStorage.getItem("orders") || "[]")
-
-orders.push({
-number:number,
-airtime:airtime
 })
 
-localStorage.setItem("orders",JSON.stringify(orders))
+currentStock = currentStock - airtime
+
+await supabase
+.from("settings")
+.update({ stock: currentStock })
+.eq("id",1)
 
 let message =
 "NEW AIRTIME ORDER%0A%0A"+
@@ -213,15 +229,6 @@ let message =
 let phone="254746975939"
 
 window.open("https://wa.me/"+phone+"?text="+message)
-
-}
-
-let stockStatus = localStorage.getItem("stockStatus")
-
-if(stockStatus === "false"){
-
-document.getElementById("stockMessage").innerHTML =
-"<h3 style='color:red'>⚠ Airtime Currently Out Of Stock</h3>"
 
 }
 
