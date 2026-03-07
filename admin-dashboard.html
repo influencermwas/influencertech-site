@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f2027;
+color:white;
+padding:30px;
+}
+
+.box{
+background:#111827;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+input{
+padding:10px;
+margin-top:5px;
+border:none;
+border-radius:5px;
+}
+
+button{
+padding:10px 20px;
+margin-top:10px;
+background:#22c55e;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #333;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<div class="box">
+
+<h3>Stock Control</h3>
+
+Stock Available
+
+<br>
+
+<input type="number" id="stock">
+
+<br>
+
+<button onclick="updateStock()">Update Stock</button>
+
+<br><br>
+
+Stock Status
+
+<br>
+
+<button onclick="setStock(true)">ON</button>
+<button onclick="setStock(false)">OFF</button>
+
+</div>
+
+<div class="box">
+
+<h3>Rate Control</h3>
+
+Rate (%)
+
+<br>
+
+<input type="number" id="rate">
+
+<br>
+
+<button onclick="updateRate()">Update Rate</button>
+
+</div>
+
+<div class="box">
+
+<h3>Sales Summary</h3>
+
+Total Sales: KES <span id="sales">0</span>
+
+</div>
+
+<div class="box">
+
+<h3>Orders</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Till</th>
+<th>Number</th>
+<th>Paid</th>
+<th>Airtime</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="orders"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const supabase = window.supabase.createClient(
+"https://ihedsiltqrxbqwnouone.supabase.co",
+"sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+)
+
+async function loadSettings(){
+
+const { data } = await supabase
+.from("settings")
+.select("*")
+.eq("id",1)
+.single()
+
+document.getElementById("stock").value = data.stock
+document.getElementById("rate").value = data.rate
+
+}
+
+async function updateStock(){
+
+let stock = document.getElementById("stock").value
+
+await supabase
+.from("settings")
+.update({ stock: stock })
+.eq("id",1)
+
+alert("Stock Updated")
+
+}
+
+async function updateRate(){
+
+let rate = document.getElementById("rate").value
+
+await supabase
+.from("settings")
+.update({ rate: rate })
+.eq("id",1)
+
+alert("Rate Updated")
+
+}
+
+async function setStock(status){
+
+await supabase
+.from("settings")
+.update({ stock_status: status })
+.eq("id",1)
+
+alert("Stock Status Updated")
+
+}
+
+async function loadOrders(){
+
+const { data } = await supabase
+.from("orders")
+.select("*")
+.order("created_at",{ascending:false})
+
+let html=""
+let totalSales=0
+
+data.forEach(o=>{
+
+totalSales += o.amount_paid
+
+html += `
+<tr>
+<td>${o.till_name}</td>
+<td>${o.receiving_number}</td>
+<td>${o.amount_paid}</td>
+<td>${o.airtime_sent}</td>
+<td>${new Date(o.created_at).toLocaleString()}</td>
+</tr>
+`
+
+})
+
+document.getElementById("orders").innerHTML = html
+document.getElementById("sales").innerText = totalSales
+
+}
+
+loadSettings()
+loadOrders()
+
+</script>
+
+</body>
+</html>
