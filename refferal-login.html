@@ -1,38 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Supabase Test</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<title>JS Test</title>
 </head>
 
 <body style="font-family:Arial;text-align:center;margin-top:100px;">
 
-<h2>Supabase Connection Test</h2>
+<h2>JavaScript Test</h2>
 
-<button onclick="testConnection()">Test Database</button>
+<button onclick="sayHello()">Click Me</button>
 
 <p id="result"></p>
 
 <script>
-
-const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
-const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
-const db = supabase.createClient(supabaseUrl, supabaseKey)
-
-async function testConnection(){
-
-const { data, error } = await db
-.from("referral_users")
-.select("*")
-
-if(error){
-document.getElementById("result").innerText = "ERROR: " + error.message
-}else{
-document.getElementById("result").innerText = "SUCCESS: Connected to database. Rows found: " + data.length
+function sayHello(){
+document.getElementById("result").innerText = "JavaScript is working!"
 }
-
-}
-
 </script>
 
 </body>
