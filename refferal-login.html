@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Influencertech Referral</title>
+<title>Supabase Test</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 
-<body style="font-family:Arial;text-align:center;margin-top:60px;">
+<body style="font-family:Arial;text-align:center;margin-top:100px;">
 
-<h2>Influencertech Referral Program</h2>
+<h2>Supabase Connection Test</h2>
 
-<div id="loginBox">
+<button onclick="testConnection()">Test Database</button>
 
-<input id="phone" placeholder="Phone number"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-
-<button onclick="loginUser()">Login</button>
-
-</div>
-
-<div id="dashboardBox" style="display:none;">
-<h3>Welcome to Dashboard</h3>
-<div id="content"></div>
-<br>
-<button onclick="logout()">Logout</button>
-</div>
+<p id="result"></p>
 
 <script>
 
@@ -31,49 +19,18 @@ const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
 const db = supabase.createClient(supabaseUrl, supabaseKey)
 
-async function loginUser(){
-
-let phone = document.getElementById("phone").value.trim()
-let password = document.getElementById("password").value.trim()
-
-if(!phone || !password){
-alert("Enter phone and password")
-return
-}
+async function testConnection(){
 
 const { data, error } = await db
 .from("referral_users")
 .select("*")
-.eq("phone", phone)
-.eq("password", password)
-.single()
 
-if(error || !data){
-alert("Wrong login details")
-return
+if(error){
+document.getElementById("result").innerText = "ERROR: " + error.message
+}else{
+document.getElementById("result").innerText = "SUCCESS: Connected to database. Rows found: " + data.length
 }
 
-// hide login
-document.getElementById("loginBox").style.display = "none"
-
-// show dashboard
-document.getElementById("dashboardBox").style.display = "block"
-
-document.getElementById("content").innerHTML = `
-<p><strong>Phone:</strong> ${data.phone}</p>
-<p><strong>Referral Code:</strong> ${data.referral_code}</p>
-<p><strong>Total Referrals:</strong> ${data.referrals}</p>
-<p><strong>Earnings:</strong> ${data.earnings}</p>
-<p><strong>Your Referral Link:</strong><br>
-${window.location.origin}/referral-register?ref=${data.referral_code}
-</p>
-`
-
-}
-
-function logout(){
-document.getElementById("loginBox").style.display = "block"
-document.getElementById("dashboardBox").style.display = "none"
 }
 
 </script>
