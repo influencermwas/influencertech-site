@@ -10,7 +10,6 @@
 <h2>Referral Dashboard</h2>
 
 <div id="content">Loading...</div>
-
 <br>
 <button onclick="logout()">Logout</button>
 
@@ -26,7 +25,7 @@ async function loadDashboard(){
 let phone = localStorage.getItem("user_phone")
 
 if(!phone){
-window.location.href = "/referral-login"
+window.location.href = "referral-login.html"
 return
 }
 
@@ -38,7 +37,7 @@ const { data, error } = await db
 
 if(error || !data){
 localStorage.removeItem("user_phone")
-window.location.href = "/referral-login"
+window.location.href = "referral-login.html"
 return
 }
 
@@ -46,17 +45,14 @@ document.getElementById("content").innerHTML = `
 <p><strong>Phone:</strong> ${data.phone}</p>
 <p><strong>Referral Code:</strong> ${data.referral_code}</p>
 <p><strong>Total Referrals:</strong> ${data.referrals}</p>
-<p><strong>Earnings (KES):</strong> ${data.earnings}</p>
-<p><strong>Your Referral Link:</strong><br>
-${window.location.origin}/referral-register?ref=${data.referral_code}
-</p>
+<p><strong>Earnings:</strong> ${data.earnings}</p>
 `
 
 }
 
 function logout(){
 localStorage.removeItem("user_phone")
-window.location.href = "/referral-login"
+window.location.href = "referral-login.html"
 }
 
 loadDashboard()
