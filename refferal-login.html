@@ -7,7 +7,7 @@
 
 <body style="font-family:Arial;text-align:center;margin-top:100px;">
 
-<h2>Referral Login</h2>
+<h2>Influencertech Referral Login</h2>
 
 <input id="phone" placeholder="Phone number"><br><br>
 <input id="password" type="password" placeholder="Password"><br><br>
@@ -26,6 +26,11 @@ async function loginUser(){
 let phone = document.getElementById("phone").value.trim()
 let password = document.getElementById("password").value.trim()
 
+if(!phone || !password){
+alert("Enter phone and password")
+return
+}
+
 const { data, error } = await db
 .from("referral_users")
 .select("*")
@@ -38,10 +43,11 @@ alert("Wrong login details")
 return
 }
 
-localStorage.setItem("user_phone", phone)
+// Save session
+localStorage.setItem("referral_user", phone)
 
-// use RELATIVE html file
-window.location.href = "referral-dashboard.html"
+// Clean redirect (NO .html)
+window.location.href = "/referral-dashboard"
 
 }
 
