@@ -61,7 +61,7 @@ margin-top:10px;
 }
 
 button{
-margin-top:20px;
+margin-top:15px;
 padding:12px 20px;
 background:#22c55e;
 border:none;
@@ -73,6 +73,14 @@ cursor:pointer;
 
 button:hover{
 background:#16a34a;
+}
+
+.copy-btn{
+background:#2563eb;
+}
+
+.copy-btn:hover{
+background:#1d4ed8;
 }
 
 </style>
@@ -100,7 +108,9 @@ background:#16a34a;
 
 <h3>Pay with M-Pesa</h3>
 
-<p><b>Till Number:</b> 8396206</p>
+<p><b>Till Number:</b> <span id="till">8396206</span></p>
+
+<button class="copy-btn" onclick="copyTill()">Copy Till Number</button>
 
 <p class="warning">
 ⚠️ Only confirm order after completing M-Pesa payment.
@@ -114,6 +124,7 @@ background:#16a34a;
 
 <script>
 
+/* CHANGE DAILY RATE HERE */
 const RATE = 0.90;
 
 function calculate(){
@@ -130,6 +141,16 @@ let airtime = amount / RATE;
 airtime = Math.round(airtime);
 
 document.getElementById("receive").value = airtime;
+
+}
+
+function copyTill(){
+
+let till = document.getElementById("till").innerText;
+
+navigator.clipboard.writeText(till);
+
+alert("Till number copied: " + till);
 
 }
 
