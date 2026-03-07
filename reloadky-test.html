@@ -2,18 +2,19 @@
 <html>
 <head>
 <title>Reloadly API Test</title>
+
 <style>
 body{
 font-family:Arial;
-background:#111;
+background:#111827;
 color:white;
 text-align:center;
-padding-top:100px;
+padding-top:80px;
 }
 
 button{
 padding:15px 25px;
-background:#28a745;
+background:#22c55e;
 border:none;
 color:white;
 font-size:18px;
@@ -25,18 +26,22 @@ cursor:pointer;
 margin-top:20px;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>Reloadly API Testing Page</h1>
+<h1>Reloadly API Test Page</h1>
 
-<button onclick="getToken()">Test Reloadly Connection</button>
+<p>This page is for testing Reloadly connection.</p>
+
+<button onclick="testAPI()">Test Reloadly Connection</button>
 
 <div id="result"></div>
 
 <script>
-async function getToken(){
+
+async function testAPI(){
 
 document.getElementById("result").innerHTML="Connecting...";
 
@@ -55,10 +60,11 @@ audience:"https://topups.reloadly.com"
 
 const data = await response.json();
 
-document.getElementById("result").innerHTML=
+document.getElementById("result").innerHTML =
 "<pre>"+JSON.stringify(data,null,2)+"</pre>";
 
 }
+
 </script>
 
 </body>
