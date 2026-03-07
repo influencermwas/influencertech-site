@@ -18,18 +18,12 @@
 
 const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
 const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
-
 const db = supabase.createClient(supabaseUrl, supabaseKey)
 
 async function loginUser(){
 
 let phone = document.getElementById("phone").value.trim()
 let password = document.getElementById("password").value.trim()
-
-if(!phone || !password){
-alert("Enter phone and password")
-return
-}
 
 const { data, error } = await db
 .from("referral_users")
@@ -43,11 +37,10 @@ alert("Wrong login details")
 return
 }
 
-// Save session
-localStorage.setItem("referral_user", phone)
+alert("Login successful")
 
-// Clean redirect (NO .html)
-window.location.href = "/referral-dashboard"
+// PASS PHONE IN URL
+window.location.href = "/referral-dashboard?phone=" + phone
 
 }
 
