@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Referral Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:100px;">
+
+<h2>Influencertech Referral Login</h2>
+
+<input id="phone" placeholder="Phone number"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+<script>
+const supabaseUrl = "https://ihedsiltqrxbqwnouone.supabase.co"
+const supabaseKey = "sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+async function login() {
+  const phone = document.getElementById("phone").value.trim()
+  const password = document.getElementById("password").value.trim()
+
+  const { data, error } = await supabase
+    .from("referral_users")
+    .select("*")
+    .eq("phone", phone)
+    .eq("password", password)
+    .single()
+
+  if (error || !data) {
+    document.getElementById("msg").innerText = "Wrong login details"
+    return
+  }
+
+  localStorage.setItem("referral_phone", phone)
+  window.location.href = "/referral-dashboard"
+}
+</script>
+
+</body>
+</html>
