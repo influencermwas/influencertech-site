@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Test</h2>
+
+<input type="number" id="amount" oninput="calc()">
+<input type="text" id="result">
+
+<script>
+
+function calc(){
+
+let amount = document.getElementById("amount").value
+
+document.getElementById("result").value = amount * 2
+
+}
+
+</script>
+
+</body>
+</html>
