@@ -39,6 +39,10 @@ border-radius:5px;
 color:white;
 cursor:pointer;
 }
+
+#panel{
+display:none;
+}
 </style>
 
 </head>
@@ -46,6 +50,22 @@ cursor:pointer;
 <body>
 
 <div class="box">
+
+<div id="login">
+
+<h2>Admin Login</h2>
+
+<input type="password" id="password" placeholder="Enter password">
+
+<br>
+
+<button onclick="login()">Login</button>
+
+<p id="error"></p>
+
+</div>
+
+<div id="panel">
 
 <h2>Admin Panel</h2>
 
@@ -61,7 +81,28 @@ cursor:pointer;
 
 </div>
 
+</div>
+
 <script>
+
+const adminPassword = "Brian4503"
+
+function login(){
+
+let pass = document.getElementById("password").value
+
+if(pass === adminPassword){
+
+document.getElementById("login").style.display="none"
+document.getElementById("panel").style.display="block"
+
+}else{
+
+document.getElementById("error").innerText="Wrong password"
+
+}
+
+}
 
 function saveRate(){
 
