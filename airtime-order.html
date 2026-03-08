@@ -29,10 +29,15 @@ max-width:420px;
 text-align:center;
 }
 
+label{
+display:block;
+margin-top:15px;
+}
+
 input{
 width:90%;
 padding:12px;
-margin-top:10px;
+margin-top:8px;
 border-radius:8px;
 border:none;
 }
@@ -52,6 +57,7 @@ background:#2563eb;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -117,18 +123,14 @@ function calculate(){
 
 let amount = document.getElementById("amount").value
 
-if(amount == "" || amount <= 0){
-
+if(amount === "" || amount <= 0){
 document.getElementById("receive").value = ""
 return
-
 }
 
 let airtime = amount / (currentRate/100)
 
-airtime = Math.round(airtime)
-
-document.getElementById("receive").value = airtime
+document.getElementById("receive").value = Math.round(airtime)
 
 }
 
