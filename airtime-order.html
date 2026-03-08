@@ -11,7 +11,8 @@ color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
+margin:0;
 }
 
 .box{
@@ -19,7 +20,7 @@ background:#111827;
 padding:30px;
 border-radius:10px;
 text-align:center;
-width:320px;
+width:350px;
 }
 
 input{
@@ -39,6 +40,19 @@ border-radius:5px;
 color:white;
 cursor:pointer;
 }
+
+.copy-btn{
+background:#2563eb;
+}
+
+.instructions{
+background:#020617;
+padding:15px;
+margin-top:20px;
+border-radius:8px;
+font-size:14px;
+}
+
 </style>
 
 </head>
@@ -58,44 +72,4 @@ cursor:pointer;
 <label>Amount Paid</label>
 <input type="number" id="amount">
 
-<label>To Receive</label>
-<input type="text" id="receive" readonly>
-
-<button onclick="confirmOrder()">Confirm Order</button>
-
-</div>
-
-<script>
-
-/* calculator rate */
-let rate = 90
-
-/* calculator */
-let amountInput = document.getElementById("amount")
-let receiveInput = document.getElementById("receive")
-
-amountInput.addEventListener("input", function(){
-
-let amount = amountInput.value
-
-if(amount === "" || amount <= 0){
-receiveInput.value = ""
-return
-}
-
-let airtime = amount / (rate/100)
-
-receiveInput.value = Math.round(airtime)
-
-})
-
-function confirmOrder(){
-
-alert("Order sent")
-
-}
-
-</script>
-
-</body>
-</html>
+<label
