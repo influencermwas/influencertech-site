@@ -30,10 +30,6 @@ text-align:center;
 box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
 
-h2{
-margin-top:0;
-}
-
 label{
 display:block;
 margin-top:15px;
@@ -87,8 +83,6 @@ background:#2563eb;
 
 <h2>Buy Airtime</h2>
 
-<div id="stockMessage"></div>
-
 <label>Till Name</label>
 <input type="text" id="tillname" placeholder="Enter till name">
 
@@ -96,7 +90,7 @@ background:#2563eb;
 <input type="text" id="number" placeholder="07XXXXXXXX">
 
 <label>Amount Paid</label>
-<input type="number" id="amount" oninput="calculate()">
+<input type="number" id="amount">
 
 <label>To Receive</label>
 <input type="text" id="receive" readonly>
@@ -127,12 +121,12 @@ const supabase = window.supabase.createClient(
 )
 
 let currentRate = 90
-let currentStock = 0
+let currentStock = 100000
 let stockStatus = true
 
 async function loadSettings(){
 
-const { data, error } = await supabase
+const { data } = await supabase
 .from("settings")
 .select("*")
 .eq("id",1)
@@ -140,8 +134,8 @@ const { data, error } = await supabase
 
 if(data){
 
-currentRate = data.rate
-currentStock = data.stock
+currentRate = data.rate || 90
+currentStock = data.stock || 100000
 stockStatus = data.stock_status
 
 }
@@ -150,16 +144,15 @@ stockStatus = data.stock_status
 
 loadSettings()
 
+document.getElementById("amount").addEventListener("input", calculate)
+
 function calculate(){
 
 let amount = document.getElementById("amount").value
 
 if(!amount || amount <= 0){
-
 document.getElementById("receive").value=""
-
 return
-
 }
 
 let rate = currentRate / 100
@@ -185,11 +178,8 @@ alert("Till number copied: " + till)
 async function confirmOrder(){
 
 if(!stockStatus){
-
 alert("Airtime currently out of stock")
-
 return
-
 }
 
 let tillname = document.getElementById("tillname").value
@@ -198,28 +188,20 @@ let amount = document.getElementById("amount").value
 let airtime = document.getElementById("receive").value
 
 if(!tillname || !number || !amount){
-
 alert("Please fill all fields")
-
 return
-
 }
 
 if(currentStock < airtime){
-
 alert("Not enough airtime stock")
-
 return
-
 }
 
 await supabase.from("orders").insert({
-
 till_name:tillname,
 receiving_number:number,
 amount_paid:amount,
 airtime_sent:airtime
-
 })
 
 currentStock = currentStock - airtime
@@ -236,9 +218,7 @@ let message =
 "Amount Paid: "+amount+"%0A"+
 "Airtime To Send: "+airtime
 
-let phone="254746975939"
-
-window.open("https://wa.me/"+phone+"?text="+message)
+window.open("https://wa.me/254746975939?text="+message)
 
 }
 
