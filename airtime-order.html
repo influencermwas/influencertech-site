@@ -100,7 +100,7 @@ font-size:14px;
 <script>
 
 /* Calculator rate */
-let rate = 90
+let rate = localStorage.getItem("airtime_rate") || 90
 
 let amountInput = document.getElementById("amount")
 let receiveInput = document.getElementById("receive")
