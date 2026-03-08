@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Select Network</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Airtime Network</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, Helvetica, sans-serif;
 margin:0;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
@@ -20,23 +22,34 @@ min-height:100vh;
 text-align:center;
 }
 
+h2{
+margin-bottom:30px;
+}
+
 .card{
 display:flex;
 align-items:center;
 gap:15px;
-background:#111827;
+background:#0f172a;
 padding:20px;
-margin:15px;
-border-radius:12px;
+margin:15px auto;
+border-radius:14px;
 text-decoration:none;
 color:white;
 font-size:18px;
-width:250px;
+width:260px;
 justify-content:center;
+box-shadow:0 10px 20px rgba(0,0,0,0.3);
+transition:0.2s;
+}
+
+.card:hover{
+transform:scale(1.05);
 }
 
 .card img{
-width:40px;
+width:45px;
+height:45px;
 }
 
 </style>
@@ -51,7 +64,7 @@ width:40px;
 
 <a class="card" href="airtime-order.html">
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Safaricom_logo.svg">
+<img src="https://img.icons8.com/color/96/safari.png"/>
 
 Safaricom Airtime
 
@@ -59,7 +72,7 @@ Safaricom Airtime
 
 <a class="card" href="airtime-order.html">
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Airtel_logo.svg">
+<img src="https://img.icons8.com/color/96/sim-card-chip.png"/>
 
 Airtel Airtime
 
