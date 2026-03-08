@@ -3,6 +3,8 @@
 <head>
 <title>Buy Airtime</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 body{
 font-family:Arial;
@@ -52,8 +54,8 @@ border-radius:10px;
 margin-top:20px;
 font-size:14px;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -99,7 +101,13 @@ font-size:14px;
 
 <script>
 
-/* Rate percentage */
+/* Supabase connection */
+const supabase = window.supabase.createClient(
+"https://ihedsiltqrxbqwnouone.supabase.co",
+"sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+)
+
+/* WORKING CALCULATOR (UNCHANGED) */
 let rate = 90
 
 let amountInput = document.getElementById("amount")
@@ -120,17 +128,18 @@ receiveInput.value = Math.round(airtime)
 
 })
 
+/* Copy till */
 function copyTill(){
 
 let till = document.getElementById("till").innerText
-
 navigator.clipboard.writeText(till)
 
 alert("Till number copied")
 
 }
 
-function confirmOrder(){
+/* Confirm order */
+async function confirmOrder(){
 
 let tillname=document.getElementById("tillname").value
 let number=document.getElementById("number").value
@@ -142,6 +151,15 @@ alert("Fill all fields")
 return
 }
 
+/* Save order to Supabase */
+await supabase.from("orders").insert({
+till_name:tillname,
+receiving_number:number,
+amount_paid:amount,
+airtime_sent:airtime
+})
+
+/* Send WhatsApp message */
 let msg =
 "NEW AIRTIME ORDER%0A"+
 "Till Name: "+tillname+"%0A"+
