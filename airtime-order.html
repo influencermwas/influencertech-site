@@ -1,65 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Airtime Calculator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Airtime</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 body{
 font-family:Arial;
-background:#111827;
+margin:0;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 }
 
-.box{
-background:#1f2937;
+.container{
+background:#111827;
 padding:30px;
-border-radius:10px;
+border-radius:15px;
+width:90%;
+max-width:420px;
 text-align:center;
 }
 
 input{
-padding:10px;
-margin:10px;
-width:200px;
+width:90%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:none;
 }
+
+button{
+margin-top:15px;
+padding:12px 20px;
+background:#22c55e;
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+}
+
+.copy-btn{
+background:#2563eb;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>Airtime Calculator</h2>
+<h2>Buy Airtime</h2>
 
-<input type="number" id="amount" placeholder="Amount Paid" oninput="calculate()">
+<label>Till Name</label>
+<input type="text" id="tillname">
 
-<br>
+<label>Receiving Number</label>
+<input type="text" id="number">
 
-<input type="text" id="receive" placeholder="To Receive" readonly>
+<label>Amount Paid</label>
+<input type="number" id="amount" oninput="calculate()">
+
+<label>To Receive</label>
+<input type="text" id="receive" readonly>
+
+<h3>M-Pesa Payment</h3>
+
+<p><b>Till:</b> <span id="till">8396206</span></p>
+
+<button class="copy-btn" onclick="copyTill()">Copy Till</button>
+
+<button onclick="confirmOrder()">Confirm Order</button>
 
 </div>
 
 <script>
 
-let rate = 90
+const supabase = window.supabase.createClient(
+"https://ihedsiltqrxbqwnouone.supabase.co",
+"sb_publishable_2HLZ4B0X1atCHE_PBhXAmw_akGNlxlJ"
+)
+
+/* default rate so calculator works instantly */
+let currentRate = 90
+let currentStock = 100000
+let stockStatus = true
 
 function calculate(){
 
 let amount = document.getElementById("amount").value
 
 if(amount == "" || amount <= 0){
-document.getElementById("receive").value = ""
+document.getElementById("receive").value=""
 return
 }
 
-let airtime = amount / (rate/100)
+let airtime = amount / (currentRate/100)
 
 document.getElementById("receive").value = Math.round(airtime)
+
+}
+
+/* load real rate from supabase */
+async function loadSettings(){
+
+const { data } = await supabase
+.from("settings")
+.select("*")
+.eq("id",1)
+.single()
+
+if(data){
+currentRate = data.rate
+currentStock = data.stock
+stockStatus = data.stock_status
+}
+
+}
+
+loadSettings()
+
+function copyTill(){
+
+let till = document.getElementById("till").innerText
+navigator.clipboard.writeText(till)
+alert("Till copied")
+
+}
+
+async function confirmOrder(){
+
+if(!stockStatus){
+alert("Airtime currently out of stock")
+return
+}
+
+let tillname=document.getElementById("tillname").value
+let number=document.getElementById("number").value
+let amount=document.getElementById("amount").value
+let airtime=document.getElementById("receive").value
+
+if(!tillname || !number || !amount){
+alert("Fill all fields")
+return
+}
+
+await supabase.from("orders").insert({
+till_name:tillname,
+receiving_number:number,
+amount_paid:amount,
+airtime_sent:airtime
+})
+
+await supabase
+.from("settings")
+.update({ stock: currentStock - airtime })
+.eq("id",1)
+
+let msg=
+"NEW AIRTIME ORDER%0A"+
+"Till Name: "+tillname+"%0A"+
+"Receiving Number: "+number+"%0A"+
+"Amount Paid: "+amount+"%0A"+
+"Airtime: "+airtime
+
+window.open("https://wa.me/254746975939?text="+msg)
 
 }
 
