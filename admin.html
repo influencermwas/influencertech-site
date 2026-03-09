@@ -70,12 +70,16 @@ display:none;
 <h2>Admin Panel</h2>
 
 <label>Set Rate (%)</label>
+<input type="number" id="rate">
 
-<input type="number" id="rate" placeholder="Example: 90">
+<br><br>
+
+<label>Available Airtime</label>
+<input type="number" id="stock">
 
 <br>
 
-<button onclick="saveRate()">Save Rate</button>
+<button onclick="saveSettings()">Save Settings</button>
 
 <p id="status"></p>
 
@@ -104,18 +108,15 @@ document.getElementById("error").innerText="Wrong password"
 
 }
 
-function saveRate(){
+function saveSettings(){
 
 let rate = document.getElementById("rate").value
-
-if(rate < 80 || rate > 100){
-alert("Enter valid rate")
-return
-}
+let stock = document.getElementById("stock").value
 
 localStorage.setItem("airtime_rate",rate)
+localStorage.setItem("airtime_stock",stock)
 
-document.getElementById("status").innerText="Rate updated to "+rate+"%"
+document.getElementById("status").innerText="Settings updated"
 
 }
 
