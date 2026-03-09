@@ -113,10 +113,20 @@ function saveSettings(){
 let rate = document.getElementById("rate").value
 let stock = document.getElementById("stock").value
 
-localStorage.setItem("airtime_rate",rate)
-localStorage.setItem("airtime_stock",stock)
-
+fetch("update-settings.php",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+rate:rate,
+stock:stock
+})
+})
+.then(res=>res.text())
+.then(data=>{
 document.getElementById("status").innerText="Settings updated"
+})
 
 }
 
