@@ -114,7 +114,7 @@ let availableStock = localStorage.getItem("airtime_stock") || 100000
 
 document.getElementById("stockDisplay").innerText =
 "Available Airtime: " + availableStock + " KES"
-  fetch("settings.json")
+ fetch("settings.json?v=" + Date.now())
 .then(res => res.json())
 .then(data => {
 
