@@ -114,6 +114,16 @@ let availableStock = localStorage.getItem("airtime_stock") || 100000
 
 document.getElementById("stockDisplay").innerText =
 "Available Airtime: " + availableStock + " KES"
+  fetch("settings.json")
+.then(res => res.json())
+.then(data => {
+
+rate = data.rate
+
+document.getElementById("stockDisplay").innerText =
+"Available Airtime: " + data.stock + " KES"
+
+})
 /* Calculator rate */
 let rate = localStorage.getItem("airtime_rate") || 90
 
