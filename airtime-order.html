@@ -10,39 +10,51 @@ margin:0;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 min-height:100vh;
+display:flex;
+justify-content:center;
 }
 
 .container{
 width:100%;
-min-height:100vh;
-padding:25px;
+max-width:420px;
+padding:20px;
 box-sizing:border-box;
-background:#111827;
 }
 
 input{
-input{
 width:100%;
-padding:12px;
-margin-top:10px;
+padding:14px;
+margin-top:6px;
+margin-bottom:14px;
 border-radius:8px;
 border:none;
+font-size:16px;
 }
 
 button{
-width:100%;
 padding:14px;
-margin-top:12px;
-}
 border:none;
 border-radius:8px;
-background:#22c55e;
-color:white;
+font-size:16px;
 cursor:pointer;
+}
+
+.btn-group{
+display:flex;
+gap:10px;
+margin-top:10px;
 }
 
 .copy-btn{
 background:#2563eb;
+color:white;
+flex:1;
+}
+
+.confirm-btn{
+background:#22c55e;
+color:white;
+flex:1;
 }
 
 .instructions{
@@ -78,10 +90,10 @@ font-size:14px;
 
 <p><b>Till Number:</b> <span id="till">8396206</span></p>
 
+<div class="btn-group">
 <button class="copy-btn" onclick="copyTill()">Copy Till</button>
-
-<button onclick="confirmOrder()">Confirm Order</button>
-
+<button class="confirm-btn" onclick="confirmOrder()">Confirm Order</button>
+</div>
 <div class="instructions">
 
 <b>How to Buy Airtime</b><br><br>
