@@ -67,7 +67,7 @@ font-size:14px;
 
 <label>Receiving Number</label>
 <input type="text" id="number">
-
+<p id="stockDisplay" style="color:#4ade80;font-weight:bold;"></p>
 <label>Amount Paid</label>
 <input type="number" id="amount">
 
@@ -98,7 +98,10 @@ font-size:14px;
 </div>
 
 <script>
+let availableStock = localStorage.getItem("airtime_stock") || 100000
 
+document.getElementById("stockDisplay").innerText =
+"Available Airtime: " + availableStock + " KES"
 /* Calculator rate */
 let rate = localStorage.getItem("airtime_rate") || 90
 
