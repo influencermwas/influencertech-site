@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movies & Series - Influencertech</title>
 
+<link rel="icon" href="favicon.png">
+
+<style>
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+background:#0f172a;
+color:white;
+}
+
+header{
+background:#111827;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.movies-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+padding:20px;
+max-width:1100px;
+margin:auto;
+}
+
+.movie-card{
+background:#1f2937;
+border-radius:10px;
+overflow:hidden;
+text-align:center;
+padding-bottom:10px;
+}
+
+.movie-card img{
+width:100%;
+height:300px;
+object-fit:cover;
+}
+
+.movie-title{
+padding:10px;
+font-size:18px;
+}
+
+.watch-btn{
+display:inline-block;
+padding:10px 15px;
+background:#2563eb;
+color:white;
+text-decoration:none;
+border-radius:6px;
+margin-top:5px;
+}
+
+.watch-btn:hover{
+background:#1d4ed8;
+}
+
+.back-home{
+display:block;
+text-align:center;
+margin:20px;
+text-decoration:none;
+color:#60a5fa;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+🎬 Movies & Series
+</header>
+
+<div class="movies-container">
+
+<div class="movie-card">
+<img src="https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmYtYTAwMC00ZjQxLWFmNTEtODM1ZmRlYzE5YzQ2XkEyXkFqcGc@._V1_.jpg">
+<div class="movie-title">Avengers Endgame</div>
+<a class="watch-btn" href="#">Watch</a>
+</div>
+
+<div class="movie-card">
+<img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjY0Ml5BMl5BanBnXkFtZTgwNjQ3MjM0NTM@._V1_.jpg">
+<div class="movie-title">John Wick</div>
+<a class="watch-btn" href="#">Watch</a>
+</div>
+
+<div class="movie-card">
+<img src="https://m.media-amazon.com/images/M/MV5BMTY5NDA0MzA2Ml5BMl5BanBnXkFtZTgwOTk1MTU0MzE@._V1_.jpg">
+<div class="movie-title">Fast & Furious</div>
+<a class="watch-btn" href="#">Watch</a>
+</div>
+
+<div class="movie-card">
+<img src="https://m.media-amazon.com/images/M/MV5BMzA0Yjk0ZjEtNTFiNi00ZmYxLWExMzUtZDU0ZTliYmQxODc3XkEyXkFqcGc@._V1_.jpg">
+<div class="movie-title">Spider-Man</div>
+<a class="watch-btn" href="#">Watch</a>
+</div>
+
+</div>
+
+<a class="back-home" href="index.html">⬅ Back to Home</a>
+
+</body>
+</html>
