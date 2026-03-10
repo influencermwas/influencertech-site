@@ -1,56 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Select Airtime Network</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Movies & Series</title>
 
 <style>
 
 body{
 font-family:Arial,Helvetica,sans-serif;
 margin:0;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-}
-
-.container{
-text-align:center;
-}
-
-h2{
-margin-bottom:25px;
-}
-
-.card{
-display:flex;
-align-items:center;
-gap:15px;
 background:#0f172a;
-padding:20px;
-margin:15px auto;
-border-radius:14px;
-text-decoration:none;
 color:white;
-font-size:18px;
-width:280px;
+}
+
+header{
+background:#111827;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.search-box{
+display:flex;
 justify-content:center;
-box-shadow:0 10px 20px rgba(0,0,0,0.3);
-transition:0.2s;
+gap:10px;
+margin:20px;
 }
 
-.card:hover{
-transform:scale(1.05);
+.search-box input{
+padding:12px;
+width:60%;
+max-width:400px;
+border-radius:6px;
+border:none;
 }
 
-.card img{
-width:50px;
-height:50px;
-object-fit:contain;
+.search-box button{
+padding:12px 20px;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.categories{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+padding:10px;
+}
+
+.categories button{
+padding:8px 15px;
+border:none;
+border-radius:20px;
+background:#374151;
+color:white;
+cursor:pointer;
+}
+
+.categories button:hover{
+background:#2563eb;
+}
+
+.player{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+iframe{
+width:100%;
+height:500px;
+border:none;
+border-radius:10px;
+}
+
+.servers{
+text-align:center;
+margin-bottom:15px;
+}
+
+.servers button{
+margin:5px;
+padding:10px 15px;
+border:none;
+border-radius:6px;
+background:#374151;
+color:white;
+cursor:pointer;
+}
+
+.movies{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:15px;
+padding:20px;
+max-width:1200px;
+margin:auto;
+}
+
+.movie{
+background:#1f2937;
+border-radius:8px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.movie img{
+width:100%;
+}
+
+.movie h4{
+padding:10px;
+font-size:14px;
+text-align:center;
 }
 
 </style>
@@ -59,21 +129,163 @@ object-fit:contain;
 
 <body>
 
-<div class="container">
+<header>
+🎬 Movies & Series
+</header>
 
-<h2>Select Airtime Network</h2>
+<div class="search-box">
+<input id="searchInput" placeholder="Search movies or series...">
+<button onclick="searchMovie()">Search</button>
+</div>
 
-<a class="card" href="airtime-order.html">
-<img src="safaricom.png" alt="Safaricom">
-Safaricom Airtime
-</a>
+<div class="categories">
 
-<a class="card" href="airtime-order.html">
-<img src="airtel.png" alt="Airtel">
-Airtel Airtime
-</a>
+<button onclick="loadTrending()">Trending</button>
+<button onclick="loadCategory(28)">Action</button>
+<button onclick="loadCategory(35)">Comedy</button>
+<button onclick="loadCategory(27)">Horror</button>
+<button onclick="loadCategory(16)">Animation</button>
+<button onclick="loadTV()">TV Series</button>
 
 </div>
+
+<div class="player">
+
+<div class="servers">
+<button onclick="setServer(1)">Server 1</button>
+<button onclick="setServer(2)">Server 2</button>
+<button onclick="setServer(3)">Server 3</button>
+</div>
+
+<iframe id="player"
+src="https://vidsrc.to/embed/movie/tt4154796"
+allowfullscreen></iframe>
+
+</div>
+
+<div class="movies" id="movies"></div>
+
+<script>
+
+const API_KEY="bf8178bc38b14afd2dbe7f66faa43ee5";
+
+let currentMovieType="movie";
+let currentMovieID="tt4154796";
+let currentServer=1;
+
+function updatePlayer(){
+
+let url="";
+
+if(currentServer===1){
+url=currentMovieType==="movie"
+?`https://vidsrc.to/embed/movie/${currentMovieID}`
+:`https://vidsrc.to/embed/tv/${currentMovieID}`;
+}
+
+if(currentServer===2){
+url=currentMovieType==="movie"
+?`https://vidsrc.me/embed/movie?imdb=${currentMovieID}`
+:`https://vidsrc.me/embed/tv?imdb=${currentMovieID}`;
+}
+
+if(currentServer===3){
+url=currentMovieType==="movie"
+?`https://2embed.cc/embed/${currentMovieID}`
+:`https://2embed.cc/embedtv/${currentMovieID}`;
+}
+
+document.getElementById("player").src=url;
+
+}
+
+function setServer(server){
+currentServer=server;
+updatePlayer();
+}
+
+function playMovie(type,id){
+currentMovieType=type;
+currentMovieID=id;
+updatePlayer();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function loadTrending(){
+
+let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadCategory(id){
+
+let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadTV(){
+
+let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+function displayMovies(movies){
+
+let container=document.getElementById("movies");
+
+container.innerHTML="";
+
+movies.forEach(movie=>{
+
+if(!movie.poster_path) return;
+
+let title=movie.title || movie.name;
+let poster="https://image.tmdb.org/t/p/w500"+movie.poster_path;
+let id=movie.id;
+let type=movie.media_type || (movie.first_air_date ? "tv" : "movie");
+
+let div=document.createElement("div");
+
+div.className="movie";
+
+div.innerHTML=`
+<img src="${poster}">
+<h4>${title}</h4>
+`;
+
+div.onclick=()=>playMovie(type,id);
+
+container.appendChild(div);
+
+});
+
+}
+
+async function searchMovie(){
+
+let query=document.getElementById("searchInput").value;
+
+if(query.length<2) return;
+
+let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+loadTrending();
+
+</script>
 
 </body>
 </html>
