@@ -3,75 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movies & Series - Influencertech</title>
-
-<link rel="icon" href="favicon.png">
+<title>Movies & Series</title>
 
 <style>
 
 body{
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial;
 margin:0;
 background:#0f172a;
 color:white;
+text-align:center;
 }
 
 header{
 background:#111827;
 padding:20px;
-text-align:center;
 font-size:24px;
 font-weight:bold;
 }
 
-.movies-container{
+.player{
+max-width:900px;
+margin:30px auto;
+padding:20px;
+}
+
+video{
+width:100%;
+border-radius:10px;
+}
+
+.movies{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:20px;
 padding:20px;
-max-width:1100px;
+max-width:1000px;
 margin:auto;
 }
 
-.movie-card{
+.movie{
 background:#1f2937;
-border-radius:10px;
-overflow:hidden;
-text-align:center;
-padding-bottom:10px;
-}
-
-.movie-card img{
-width:100%;
-height:300px;
-object-fit:cover;
-}
-
-.movie-title{
 padding:10px;
-font-size:18px;
+border-radius:10px;
 }
 
-.watch-btn{
-display:inline-block;
-padding:10px 15px;
+.movie img{
+width:100%;
+border-radius:10px;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+border:none;
 background:#2563eb;
 color:white;
-text-decoration:none;
 border-radius:6px;
-margin-top:5px;
+cursor:pointer;
 }
 
-.watch-btn:hover{
+button:hover{
 background:#1d4ed8;
-}
-
-.back-home{
-display:block;
-text-align:center;
-margin:20px;
-text-decoration:none;
-color:#60a5fa;
 }
 
 </style>
@@ -79,39 +72,45 @@ color:#60a5fa;
 
 <body>
 
-<header>
-🎬 Movies & Series
-</header>
+<header>🎬 Movies & Series</header>
 
-<div class="movies-container">
-
-<div class="movie-card">
-<img src="https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmYtYTAwMC00ZjQxLWFmNTEtODM1ZmRlYzE5YzQ2XkEyXkFqcGc@._V1_.jpg">
-<div class="movie-title">Avengers Endgame</div>
-<a class="watch-btn" href="#">Watch</a>
+<div class="player">
+<video id="moviePlayer" controls>
+<source src="movie1.mp4" type="video/mp4">
+Your browser does not support video.
+</video>
 </div>
 
-<div class="movie-card">
-<img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjY0Ml5BMl5BanBnXkFtZTgwNjQ3MjM0NTM@._V1_.jpg">
-<div class="movie-title">John Wick</div>
-<a class="watch-btn" href="#">Watch</a>
+<div class="movies">
+
+<div class="movie">
+<img src="https://via.placeholder.com/200x300">
+<h3>Movie 1</h3>
+<button onclick="playMovie('movie1.mp4')">Watch</button>
 </div>
 
-<div class="movie-card">
-<img src="https://m.media-amazon.com/images/M/MV5BMTY5NDA0MzA2Ml5BMl5BanBnXkFtZTgwOTk1MTU0MzE@._V1_.jpg">
-<div class="movie-title">Fast & Furious</div>
-<a class="watch-btn" href="#">Watch</a>
+<div class="movie">
+<img src="https://via.placeholder.com/200x300">
+<h3>Movie 2</h3>
+<button onclick="playMovie('movie2.mp4')">Watch</button>
 </div>
 
-<div class="movie-card">
-<img src="https://m.media-amazon.com/images/M/MV5BMzA0Yjk0ZjEtNTFiNi00ZmYxLWExMzUtZDU0ZTliYmQxODc3XkEyXkFqcGc@._V1_.jpg">
-<div class="movie-title">Spider-Man</div>
-<a class="watch-btn" href="#">Watch</a>
+<div class="movie">
+<img src="https://via.placeholder.com/200x300">
+<h3>Movie 3</h3>
+<button onclick="playMovie('movie3.mp4')">Watch</button>
 </div>
 
 </div>
 
-<a class="back-home" href="index.html">⬅ Back to Home</a>
+<script>
+
+function playMovie(movie){
+document.getElementById("moviePlayer").src = movie;
+document.getElementById("moviePlayer").play();
+}
+
+</script>
 
 </body>
 </html>
