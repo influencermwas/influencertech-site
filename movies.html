@@ -258,7 +258,7 @@ function playMovie(type,id,title,poster){
 currentMovieType=type;
 
 if(type==="movie"){
-currentMovieID="tt"+id;
+currentMovieID = id.toString().startsWith("tt") ? id : "tt"+id;
 }else{
 currentMovieID=id;
 }
