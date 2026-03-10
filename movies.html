@@ -8,34 +8,36 @@
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial,Helvetica,sans-serif;
 margin:0;
 background:#0f172a;
 color:white;
-text-align:center;
 }
 
 header{
 background:#111827;
 padding:20px;
+text-align:center;
 font-size:24px;
 font-weight:bold;
 }
 
 .player{
-max-width:900px;
-margin:30px auto;
-padding:20px;
+max-width:1000px;
+margin:20px auto;
+padding:10px;
 }
 
-video{
+iframe{
 width:100%;
+height:500px;
+border:none;
 border-radius:10px;
 }
 
 .movies{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 gap:20px;
 padding:20px;
 max-width:1000px;
@@ -44,13 +46,16 @@ margin:auto;
 
 .movie{
 background:#1f2937;
-padding:10px;
 border-radius:10px;
+overflow:hidden;
+text-align:center;
+padding-bottom:10px;
 }
 
 .movie img{
 width:100%;
-border-radius:10px;
+height:260px;
+object-fit:cover;
 }
 
 button{
@@ -75,39 +80,45 @@ background:#1d4ed8;
 <header>🎬 Movies & Series</header>
 
 <div class="player">
-<video id="moviePlayer" controls>
-<source src="movie1.mp4" type="video/mp4">
-Your browser does not support video.
-</video>
+<iframe id="moviePlayer"
+src="https://vidsrc.to/embed/movie/tt4154796"
+allowfullscreen>
+</iframe>
 </div>
 
 <div class="movies">
 
 <div class="movie">
-<img src="https://via.placeholder.com/200x300">
-<h3>Movie 1</h3>
-<button onclick="playMovie('movie1.mp4')">Watch</button>
+<img src="https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg">
+<h3>Avengers Endgame</h3>
+<button onclick="playMovie('tt4154796')">Watch</button>
 </div>
 
 <div class="movie">
-<img src="https://via.placeholder.com/200x300">
-<h3>Movie 2</h3>
-<button onclick="playMovie('movie2.mp4')">Watch</button>
+<img src="https://image.tmdb.org/t/p/w500/gh2bmprLtUQ8oXCSluzfqaicyrm.jpg">
+<h3>John Wick</h3>
+<button onclick="playMovie('tt2911666')">Watch</button>
 </div>
 
 <div class="movie">
-<img src="https://via.placeholder.com/200x300">
-<h3>Movie 3</h3>
-<button onclick="playMovie('movie3.mp4')">Watch</button>
+<img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg">
+<h3>Spider-Man No Way Home</h3>
+<button onclick="playMovie('tt10872600')">Watch</button>
+</div>
+
+<div class="movie">
+<img src="https://image.tmdb.org/t/p/w500/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg">
+<h3>Fast X</h3>
+<button onclick="playMovie('tt5433140')">Watch</button>
 </div>
 
 </div>
 
 <script>
 
-function playMovie(movie){
-document.getElementById("moviePlayer").src = movie;
-document.getElementById("moviePlayer").play();
+function playMovie(imdb){
+document.getElementById("moviePlayer").src =
+"https://vidsrc.to/embed/movie/" + imdb;
 }
 
 </script>
