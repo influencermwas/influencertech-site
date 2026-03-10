@@ -24,7 +24,6 @@ font-size:24px;
 font-weight:bold;
 }
 
-/* NEW SCROLLING TEXT */
 .marquee-bar{
 background:#1f2937;
 color:white;
@@ -80,6 +79,12 @@ font-weight:bold;
 
 .categories button:hover{
 background:#2563eb;
+}
+
+.section-title{
+text-align:center;
+font-size:22px;
+margin-top:10px;
 }
 
 .player{
@@ -139,10 +144,26 @@ text-align:center;
 margin:0;
 }
 
-.section-title{
+.episode-controls{
 text-align:center;
-font-size:22px;
-margin-top:10px;
+margin-bottom:10px;
+}
+
+.episode-controls input{
+width:60px;
+padding:5px;
+border-radius:4px;
+border:none;
+margin:0 5px;
+}
+
+.episode-controls button{
+padding:6px 12px;
+border:none;
+border-radius:6px;
+background:#2563eb;
+color:white;
+cursor:pointer;
 }
 
 </style>
@@ -155,9 +176,8 @@ margin-top:10px;
 🎬 Movies & Series
 </header>
 
-<!-- NEW SCROLLING MESSAGE -->
 <div class="marquee-bar">
-<marquee behavior="scroll" direction="left">
+<marquee>
 🎬 Welcome to Movies & Series • Enjoy unlimited movies and TV shows • ⚠ If ads appear simply close or skip them and press play again • If one server fails switch to another server • Happy Watching!
 </marquee>
 </div>
@@ -187,6 +207,18 @@ margin-top:10px;
 <button onclick="setServer(1)">Server 1</button>
 <button onclick="setServer(2)">Server 2</button>
 <button onclick="setServer(3)">Server 3</button>
+</div>
+
+<!-- NEW EPISODE CONTROLS -->
+<div class="episode-controls">
+Season 
+<input id="season" type="number" value="1">
+
+Episode 
+<input id="episode" type="number" value="1">
+
+<button onclick="loadEpisode()">Play Episode</button>
+<button onclick="nextEpisode()">Next ▶</button>
 </div>
 
 <iframe id="player"
@@ -236,18 +268,34 @@ currentServer=server;
 updatePlayer();
 }
 
+function loadEpisode(){
+
+let season=document.getElementById("season").value;
+let episode=document.getElementById("episode").value;
+
+let url=`https://vidsrc.to/embed/tv/${currentMovieID}/${season}/${episode}`;
+
+document.getElementById("player").src=url;
+
+}
+
+function nextEpisode(){
+
+let ep=document.getElementById("episode");
+
+ep.value=parseInt(ep.value)+1;
+
+loadEpisode();
+
+}
+
 function saveContinueWatching(id,type,title,poster){
 
 let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
 
-list = list.filter(movie => !(String(movie.id)===String(id) && movie.type===type));
+list = list.filter(movie => movie.id !== id);
 
-list.unshift({
-id:String(id),
-type:type,
-title:title,
-poster:poster
-});
+list.unshift({id,type,title,poster});
 
 if(list.length>6){
 list.pop();
@@ -289,7 +337,6 @@ container.appendChild(div);
 function playMovie(type,id,title,poster){
 
 currentMovieType=type;
-
 currentMovieID=id;
 
 updatePlayer();
