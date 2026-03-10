@@ -34,6 +34,39 @@ text-align:center;
 border-bottom:1px solid #374151;
 }
 
+/* FEATURED MOVIE */
+.featured{
+max-width:1200px;
+margin:20px auto;
+display:flex;
+background:#020617;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 0 20px rgba(0,0,0,0.6);
+}
+
+.featured img{
+width:200px;
+object-fit:cover;
+}
+
+.featured-info{
+padding:20px;
+}
+
+.featured-info h2{
+margin:0 0 10px 0;
+}
+
+.featured-info button{
+padding:10px 16px;
+background:#2563eb;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
 .search-box{
 display:flex;
 justify-content:center;
@@ -118,11 +151,6 @@ background:#1f2937;
 color:white;
 cursor:pointer;
 font-weight:bold;
-transition:0.3s;
-}
-
-.server-btn:hover{
-background:#2563eb;
 }
 
 .server-btn.active{
@@ -158,10 +186,17 @@ display:block;
 }
 
 .movie h4{
-padding:10px;
+padding:6px;
 font-size:14px;
 text-align:center;
 margin:0;
+}
+
+.movie small{
+display:block;
+text-align:center;
+padding-bottom:8px;
+color:#cbd5e1;
 }
 
 .episode-controls{
@@ -187,17 +222,7 @@ cursor:pointer;
 margin:3px;
 }
 
-@media (max-width:768px){
-iframe{
-height:260px;
-}
-.search-box input{
-width:90%;
-}
-}
-
 </style>
-
 </head>
 
 <body>
@@ -207,9 +232,19 @@ width:90%;
 </header>
 
 <div class="marquee-bar">
-<marquee behavior="scroll" direction="left">
-🎬 Welcome to Movies & Series • Enjoy unlimited movies and TV shows • ⚠ If ads appear simply close or skip them and press play again • If one server fails switch to another server • Happy Watching!
+<marquee>
+🎬 Welcome to Movies & Series • ⚠ If ads appear close them and press play again • Switch servers if needed
 </marquee>
+</div>
+
+<!-- FEATURED MOVIE -->
+<div class="featured" id="featuredMovie">
+<img id="featuredPoster">
+<div class="featured-info">
+<h2 id="featuredTitle"></h2>
+<p id="featuredOverview"></p>
+<button onclick="playFeatured()">▶ Watch Now</button>
+</div>
 </div>
 
 <div class="search-box">
@@ -224,7 +259,6 @@ width:90%;
 <button onclick="loadCategory(28)">Action</button>
 <button onclick="loadCategory(35)">Comedy</button>
 <button onclick="loadCategory(27)">Horror</button>
-<button onclick="loadCategory(18)">Drama</button>
 <button onclick="loadTV()">TV Series</button>
 </div>
 
@@ -239,16 +273,12 @@ width:90%;
 </div>
 
 <p class="player-warning">
-⚠ If a popup appears, close it and press play again or switch server.
+⚠ If popup appears close it and press play again.
 </p>
 
-<div class="episode-controls">
-Season
-<input id="season" type="number" value="1" min="1">
-
-Episode
-<input id="episode" type="number" value="1" min="1">
-
+<div class="episode-controls" id="episodeControls">
+Season <input id="season" type="number" value="1">
+Episode <input id="episode" type="number" value="1">
 <button onclick="loadEpisode()">Play Episode</button>
 <button onclick="nextEpisode()">Next ▶</button>
 </div>
@@ -268,6 +298,34 @@ const API_KEY="bf8178bc38b14afd2dbe7f66faa43ee5";
 let currentMovieType="movie";
 let currentMovieID="385687";
 let currentServer=1;
+
+/* FEATURED MOVIE */
+
+async function loadFeatured(){
+
+let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+
+let data=await res.json();
+
+let movie=data.results[0];
+
+document.getElementById("featuredPoster").src="https://image.tmdb.org/t/p/w500"+movie.poster_path;
+
+document.getElementById("featuredTitle").innerText=movie.title;
+
+document.getElementById("featuredOverview").innerText=movie.overview;
+
+window.featuredID=movie.id;
+
+}
+
+function playFeatured(){
+
+playMovie("movie",featuredID);
+
+}
+
+/* PLAYER */
 
 function updatePlayer(){
 
@@ -293,37 +351,22 @@ function setServer(server,btn){
 
 currentServer=server;
 
-document.querySelectorAll(".server-btn").forEach(button=>{
-button.classList.remove("active");
-});
+document.querySelectorAll(".server-btn").forEach(b=>b.classList.remove("active"));
 
-if(btn){
 btn.classList.add("active");
-}
 
 updatePlayer();
 
 }
 
-function loadEpisode(){
+/* EPISODES */
 
-if(currentMovieType!=="tv"){
-alert("Please open a TV series first.");
-return;
-}
+function loadEpisode(){
 
 let season=document.getElementById("season").value;
 let episode=document.getElementById("episode").value;
 
-let url="";
-
-if(currentServer===1){
-url=`https://vidsrc.to/embed/tv/${currentMovieID}/${season}/${episode}`;
-}
-
-if(currentServer===2){
-url=`https://vidsrc.me/embed/tv/${currentMovieID}/${season}/${episode}`;
-}
+let url=`https://vidsrc.to/embed/tv/${currentMovieID}/${season}/${episode}`;
 
 document.getElementById("player").src=url;
 
@@ -331,130 +374,32 @@ document.getElementById("player").src=url;
 
 function nextEpisode(){
 
-if(currentMovieType!=="tv"){
-alert("Please open a TV series first.");
-return;
-}
-
 let ep=document.getElementById("episode");
-ep.value=parseInt(ep.value || 1)+1;
+
+ep.value=parseInt(ep.value)+1;
 
 loadEpisode();
 
 }
 
-function saveContinueWatching(id,type,title,poster){
-
-let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
-
-list = list.filter(movie => !(String(movie.id)===String(id) && movie.type===type));
-
-list.unshift({
-id:String(id),
-type:type,
-title:title,
-poster:poster
-});
-
-if(list.length>6){
-list.pop();
-}
-
-localStorage.setItem("continueWatching",JSON.stringify(list));
-
-loadContinueWatching();
-
-}
-
-function loadContinueWatching(){
-
-let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
-
-let container=document.getElementById("continueWatching");
-
-container.innerHTML="";
-
-list.forEach(movie=>{
-
-let div=document.createElement("div");
-
-div.className="movie";
-
-div.innerHTML=`
-<img src="${movie.poster}" alt="${movie.title}">
-<h4>${movie.title}</h4>
-`;
-
-div.onclick=()=>playMovie(movie.type,movie.id,movie.title,movie.poster);
-
-container.appendChild(div);
-
-});
-
-}
+/* PLAY MOVIE */
 
 function playMovie(type,id,title,poster){
 
 currentMovieType=type;
-currentMovieID=String(id);
-
-if(type==="tv"){
-document.getElementById("season").value=1;
-document.getElementById("episode").value=1;
-}
+currentMovieID=id;
 
 updatePlayer();
 
-saveContinueWatching(id,type,title,poster);
-
-window.scrollTo({top:0,behavior:"smooth"});
+if(type==="movie"){
+document.getElementById("episodeControls").style.display="none";
+}else{
+document.getElementById("episodeControls").style.display="block";
+}
 
 }
 
-async function loadTrending(){
-
-let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
-let data=await res.json();
-
-displayMovies(data.results || []);
-
-}
-
-async function loadPopular(){
-
-let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
-let data=await res.json();
-
-displayMovies(data.results || []);
-
-}
-
-async function loadTopRated(){
-
-let res=await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
-let data=await res.json();
-
-displayMovies(data.results || []);
-
-}
-
-async function loadCategory(id){
-
-let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
-let data=await res.json();
-
-displayMovies(data.results || []);
-
-}
-
-async function loadTV(){
-
-let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
-let data=await res.json();
-
-displayMovies(data.results || []);
-
-}
+/* MOVIE GRID */
 
 function displayMovies(movies){
 
@@ -468,16 +413,20 @@ if(!movie.poster_path) return;
 
 let title=movie.title || movie.name;
 let poster="https://image.tmdb.org/t/p/w500"+movie.poster_path;
+let rating=movie.vote_average.toFixed(1);
+let year=(movie.release_date || movie.first_air_date || "").slice(0,4);
+
 let id=movie.id;
-let type=movie.media_type || (movie.first_air_date ? "tv" : "movie");
+let type=movie.media_type || (movie.first_air_date ? "tv":"movie");
 
 let div=document.createElement("div");
 
 div.className="movie";
 
 div.innerHTML=`
-<img src="${poster}" alt="${title}">
+<img src="${poster}">
 <h4>${title}</h4>
+<small>⭐ ${rating} • ${year}</small>
 `;
 
 div.onclick=()=>playMovie(type,id,title,poster);
@@ -488,21 +437,68 @@ container.appendChild(div);
 
 }
 
+/* API */
+
+async function loadTrending(){
+
+let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadPopular(){
+
+let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadTopRated(){
+
+let res=await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadCategory(id){
+
+let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadTV(){
+
+let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
 async function searchMovie(){
 
-let query=document.getElementById("searchInput").value.trim();
+let query=document.getElementById("searchInput").value;
 
 if(query.length<2) return;
 
-let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
 let data=await res.json();
 
-displayMovies(data.results || []);
+displayMovies(data.results);
 
 }
 
 loadTrending();
-loadContinueWatching();
+loadFeatured();
 
 </script>
 
