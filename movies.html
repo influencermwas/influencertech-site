@@ -321,7 +321,12 @@ window.featuredID=movie.id;
 
 function playFeatured(){
 
-playMovie("movie",featuredID);
+currentMovieType="movie";
+currentMovieID=featuredID;
+
+updatePlayer();
+
+window.scrollTo({top:0,behavior:"smooth"});
 
 }
 
