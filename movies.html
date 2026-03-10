@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Movies & Series</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial,Helvetica,sans-serif;
 margin:0;
 background:#0f172a;
 color:white;
@@ -20,20 +20,36 @@ header{
 background:#111827;
 padding:20px;
 text-align:center;
-font-size:22px;
+font-size:24px;
+font-weight:bold;
 }
 
-.search{
-text-align:center;
+.search-box{
+display:flex;
+justify-content:center;
+gap:10px;
 margin:20px;
 }
 
-input{
+.search-box input{
 padding:12px;
 width:60%;
 max-width:400px;
 border-radius:6px;
 border:none;
+}
+
+.search-box button{
+padding:12px 20px;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.search-box button:hover{
+background:#1d4ed8;
 }
 
 .player{
@@ -63,6 +79,11 @@ background:#1f2937;
 border-radius:8px;
 overflow:hidden;
 cursor:pointer;
+transition:transform 0.2s;
+}
+
+.movie:hover{
+transform:scale(1.05);
 }
 
 .movie img{
@@ -72,6 +93,14 @@ width:100%;
 .movie h4{
 padding:10px;
 font-size:14px;
+text-align:center;
+}
+
+footer{
+text-align:center;
+padding:20px;
+font-size:12px;
+color:#aaa;
 }
 
 </style>
@@ -84,9 +113,10 @@ font-size:14px;
 🎬 Movies & Series
 </header>
 
-<div class="search">
+<div class="search-box">
 
-<input id="search" placeholder="Search movies or series...">
+<input id="searchInput" placeholder="Search movies or series...">
+<button onclick="searchMovie()">Search</button>
 
 </div>
 
@@ -94,15 +124,20 @@ font-size:14px;
 
 <iframe id="player"
 src="https://vidsrc.to/embed/movie/tt4154796"
-allowfullscreen></iframe>
+allowfullscreen>
+</iframe>
 
 </div>
 
 <div class="movies" id="movies"></div>
 
+<footer>
+Movie data provided by TMDB
+</footer>
+
 <script>
 
-const API_KEY="PUT_YOUR_TMDB_API_KEY_HERE";
+const API_KEY="bf8178bc38b14afd2dbe7f66faa43ee5";
 
 async function loadTrending(){
 
@@ -124,11 +159,13 @@ container.innerHTML="";
 
 movies.forEach(movie=>{
 
+if(!movie.poster_path) return;
+
 let title = movie.title || movie.name;
 
 let poster = "https://image.tmdb.org/t/p/w500"+movie.poster_path;
 
-let imdb = movie.id;
+let id = movie.id;
 
 let type = movie.media_type || "movie";
 
@@ -137,13 +174,11 @@ let div=document.createElement("div");
 div.className="movie";
 
 div.innerHTML=`
-
 <img src="${poster}">
 <h4>${title}</h4>
-
 `;
 
-div.onclick=()=>playMovie(type,imdb);
+div.onclick=()=>playMovie(type,id);
 
 container.appendChild(div);
 
@@ -163,15 +198,15 @@ url=`https://vidsrc.to/embed/tv/${id}`;
 
 document.getElementById("player").src=url;
 
-window.scrollTo(0,0);
+window.scrollTo({top:0,behavior:"smooth"});
 
 }
 
-document.getElementById("search").addEventListener("keyup", async function(){
+async function searchMovie(){
 
-let query=this.value;
+let query=document.getElementById("searchInput").value;
 
-if(query.length<3) return;
+if(query.length<2) return;
 
 let res=await fetch(
 `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
@@ -181,7 +216,7 @@ let data=await res.json();
 
 displayMovies(data.results);
 
-});
+}
 
 loadTrending();
 
