@@ -89,8 +89,11 @@ margin-top:10px;
 
 .player{
 max-width:1000px;
-margin:auto;
+margin:20px auto;
 padding:20px;
+background:#020617;
+border-radius:12px;
+box-shadow:0 0 20px rgba(0,0,0,0.6);
 }
 
 iframe{
@@ -103,17 +106,34 @@ background:#000;
 
 .servers{
 text-align:center;
-margin-bottom:15px;
+margin-bottom:10px;
 }
 
-.servers button{
+.server-btn{
 margin:5px;
-padding:10px 15px;
+padding:10px 16px;
 border:none;
-border-radius:6px;
-background:#374151;
+border-radius:20px;
+background:#1f2937;
 color:white;
 cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+.server-btn:hover{
+background:#2563eb;
+}
+
+.server-btn.active{
+background:#2563eb;
+}
+
+.player-warning{
+text-align:center;
+color:#cbd5e1;
+font-size:13px;
+margin:8px 0 14px 0;
 }
 
 .movies{
@@ -146,7 +166,7 @@ margin:0;
 
 .episode-controls{
 text-align:center;
-margin-bottom:10px;
+margin-bottom:15px;
 }
 
 .episode-controls input{
@@ -164,6 +184,16 @@ border-radius:6px;
 background:#2563eb;
 color:white;
 cursor:pointer;
+margin:3px;
+}
+
+@media (max-width:768px){
+iframe{
+height:260px;
+}
+.search-box input{
+width:90%;
+}
 }
 
 </style>
@@ -177,7 +207,7 @@ cursor:pointer;
 </header>
 
 <div class="marquee-bar">
-<marquee>
+<marquee behavior="scroll" direction="left">
 🎬 Welcome to Movies & Series • Enjoy unlimited movies and TV shows • ⚠ If ads appear simply close or skip them and press play again • If one server fails switch to another server • Happy Watching!
 </marquee>
 </div>
@@ -204,18 +234,20 @@ cursor:pointer;
 <div class="player">
 
 <div class="servers">
-<button onclick="setServer(1)">Server 1</button>
-<button onclick="setServer(2)">Server 2</button>
-<button onclick="setServer(3)">Server 3</button>
+<button class="server-btn active" onclick="setServer(1,this)">Server 1</button>
+<button class="server-btn" onclick="setServer(2,this)">Server 2</button>
 </div>
 
-<!-- NEW EPISODE CONTROLS -->
-<div class="episode-controls">
-Season 
-<input id="season" type="number" value="1">
+<p class="player-warning">
+⚠ If a popup appears, close it and press play again or switch server.
+</p>
 
-Episode 
-<input id="episode" type="number" value="1">
+<div class="episode-controls">
+Season
+<input id="season" type="number" value="1" min="1">
+
+Episode
+<input id="episode" type="number" value="1" min="1">
 
 <button onclick="loadEpisode()">Play Episode</button>
 <button onclick="nextEpisode()">Next ▶</button>
@@ -253,27 +285,45 @@ url=currentMovieType==="movie"
 :`https://vidsrc.me/embed/tv/${currentMovieID}`;
 }
 
-if(currentServer===3){
-url=currentMovieType==="movie"
-?`https://2embed.cc/embed/${currentMovieID}`
-:`https://2embed.cc/embedtv/${currentMovieID}`;
-}
-
 document.getElementById("player").src=url;
 
 }
 
-function setServer(server){
+function setServer(server,btn){
+
 currentServer=server;
+
+document.querySelectorAll(".server-btn").forEach(button=>{
+button.classList.remove("active");
+});
+
+if(btn){
+btn.classList.add("active");
+}
+
 updatePlayer();
+
 }
 
 function loadEpisode(){
 
+if(currentMovieType!=="tv"){
+alert("Please open a TV series first.");
+return;
+}
+
 let season=document.getElementById("season").value;
 let episode=document.getElementById("episode").value;
 
-let url=`https://vidsrc.to/embed/tv/${currentMovieID}/${season}/${episode}`;
+let url="";
+
+if(currentServer===1){
+url=`https://vidsrc.to/embed/tv/${currentMovieID}/${season}/${episode}`;
+}
+
+if(currentServer===2){
+url=`https://vidsrc.me/embed/tv/${currentMovieID}/${season}/${episode}`;
+}
 
 document.getElementById("player").src=url;
 
@@ -281,9 +331,13 @@ document.getElementById("player").src=url;
 
 function nextEpisode(){
 
-let ep=document.getElementById("episode");
+if(currentMovieType!=="tv"){
+alert("Please open a TV series first.");
+return;
+}
 
-ep.value=parseInt(ep.value)+1;
+let ep=document.getElementById("episode");
+ep.value=parseInt(ep.value || 1)+1;
 
 loadEpisode();
 
@@ -293,9 +347,14 @@ function saveContinueWatching(id,type,title,poster){
 
 let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
 
-list = list.filter(movie => movie.id !== id);
+list = list.filter(movie => !(String(movie.id)===String(id) && movie.type===type));
 
-list.unshift({id,type,title,poster});
+list.unshift({
+id:String(id),
+type:type,
+title:title,
+poster:poster
+});
 
 if(list.length>6){
 list.pop();
@@ -322,7 +381,7 @@ let div=document.createElement("div");
 div.className="movie";
 
 div.innerHTML=`
-<img src="${movie.poster}">
+<img src="${movie.poster}" alt="${movie.title}">
 <h4>${movie.title}</h4>
 `;
 
@@ -337,7 +396,12 @@ container.appendChild(div);
 function playMovie(type,id,title,poster){
 
 currentMovieType=type;
-currentMovieID=id;
+currentMovieID=String(id);
+
+if(type==="tv"){
+document.getElementById("season").value=1;
+document.getElementById("episode").value=1;
+}
 
 updatePlayer();
 
@@ -352,7 +416,7 @@ async function loadTrending(){
 let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
@@ -361,7 +425,7 @@ async function loadPopular(){
 let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
@@ -370,7 +434,7 @@ async function loadTopRated(){
 let res=await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
@@ -379,7 +443,7 @@ async function loadCategory(id){
 let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
@@ -388,7 +452,7 @@ async function loadTV(){
 let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
@@ -412,7 +476,7 @@ let div=document.createElement("div");
 div.className="movie";
 
 div.innerHTML=`
-<img src="${poster}">
+<img src="${poster}" alt="${title}">
 <h4>${title}</h4>
 `;
 
@@ -426,14 +490,14 @@ container.appendChild(div);
 
 async function searchMovie(){
 
-let query=document.getElementById("searchInput").value;
+let query=document.getElementById("searchInput").value.trim();
 
 if(query.length<2) return;
 
-let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
+let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
 let data=await res.json();
 
-displayMovies(data.results);
+displayMovies(data.results || []);
 
 }
 
