@@ -48,8 +48,26 @@ border-radius:6px;
 cursor:pointer;
 }
 
-.search-box button:hover{
-background:#1d4ed8;
+.categories{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+padding:10px;
+}
+
+.categories button{
+padding:8px 15px;
+border:none;
+border-radius:20px;
+background:#374151;
+color:white;
+cursor:pointer;
+font-weight:bold;
+}
+
+.categories button:hover{
+background:#2563eb;
 }
 
 .player{
@@ -80,10 +98,6 @@ color:white;
 cursor:pointer;
 }
 
-.servers button:hover{
-background:#2563eb;
-}
-
 .movies{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
@@ -98,11 +112,6 @@ background:#1f2937;
 border-radius:8px;
 overflow:hidden;
 cursor:pointer;
-transition:transform 0.2s;
-}
-
-.movie:hover{
-transform:scale(1.05);
 }
 
 .movie img{
@@ -113,13 +122,6 @@ width:100%;
 padding:10px;
 font-size:14px;
 text-align:center;
-}
-
-footer{
-text-align:center;
-padding:20px;
-font-size:12px;
-color:#aaa;
 }
 
 </style>
@@ -137,6 +139,17 @@ color:#aaa;
 <button onclick="searchMovie()">Search</button>
 </div>
 
+<div class="categories">
+<button onclick="loadTrending()">Trending</button>
+<button onclick="loadPopular()">Popular</button>
+<button onclick="loadTopRated()">Top Rated</button>
+<button onclick="loadCategory(28)">Action</button>
+<button onclick="loadCategory(35)">Comedy</button>
+<button onclick="loadCategory(27)">Horror</button>
+<button onclick="loadCategory(18)">Drama</button>
+<button onclick="loadTV()">TV Series</button>
+</div>
+
 <div class="player">
 
 <div class="servers">
@@ -147,16 +160,11 @@ color:#aaa;
 
 <iframe id="player"
 src="https://vidsrc.to/embed/movie/tt4154796"
-allowfullscreen>
-</iframe>
+allowfullscreen></iframe>
 
 </div>
 
 <div class="movies" id="movies"></div>
-
-<footer>
-Movie data provided by TMDB
-</footer>
 
 <script>
 
@@ -171,33 +179,21 @@ function updatePlayer(){
 let url="";
 
 if(currentServer===1){
-
-if(currentMovieType==="movie"){
-url=`https://vidsrc.to/embed/movie/${currentMovieID}`;
-}else{
-url=`https://vidsrc.to/embed/tv/${currentMovieID}`;
-}
-
+url=currentMovieType==="movie"
+?`https://vidsrc.to/embed/movie/${currentMovieID}`
+:`https://vidsrc.to/embed/tv/${currentMovieID}`;
 }
 
 if(currentServer===2){
-
-if(currentMovieType==="movie"){
-url=`https://vidsrc.me/embed/movie?imdb=${currentMovieID}`;
-}else{
-url=`https://vidsrc.me/embed/tv?imdb=${currentMovieID}`;
-}
-
+url=currentMovieType==="movie"
+?`https://vidsrc.me/embed/movie?imdb=${currentMovieID}`
+:`https://vidsrc.me/embed/tv?imdb=${currentMovieID}`;
 }
 
 if(currentServer===3){
-
-if(currentMovieType==="movie"){
-url=`https://2embed.cc/embed/${currentMovieID}`;
-}else{
-url=`https://2embed.cc/embedtv/${currentMovieID}`;
-}
-
+url=currentMovieType==="movie"
+?`https://2embed.cc/embed/${currentMovieID}`
+:`https://2embed.cc/embedtv/${currentMovieID}`;
 }
 
 document.getElementById("player").src=url;
@@ -205,18 +201,19 @@ document.getElementById("player").src=url;
 }
 
 function setServer(server){
-
 currentServer=server;
-
 updatePlayer();
-
 }
 
 function playMovie(type,id){
 
 currentMovieType=type;
 
+if(type==="movie"){
+currentMovieID="tt"+id;
+}else{
 currentMovieID=id;
+}
 
 updatePlayer();
 
@@ -227,7 +224,42 @@ window.scrollTo({top:0,behavior:"smooth"});
 async function loadTrending(){
 
 let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
+let data=await res.json();
 
+displayMovies(data.results);
+
+}
+
+async function loadPopular(){
+
+let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadTopRated(){
+
+let res=await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadCategory(id){
+
+let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
+let data=await res.json();
+
+displayMovies(data.results);
+
+}
+
+async function loadTV(){
+
+let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
 let data=await res.json();
 
 displayMovies(data.results);
@@ -245,12 +277,9 @@ movies.forEach(movie=>{
 if(!movie.poster_path) return;
 
 let title=movie.title || movie.name;
-
 let poster="https://image.tmdb.org/t/p/w500"+movie.poster_path;
-
 let id=movie.id;
-
-let type=movie.media_type || "movie";
+let type=movie.media_type || (movie.first_air_date ? "tv" : "movie");
 
 let div=document.createElement("div");
 
@@ -276,7 +305,6 @@ let query=document.getElementById("searchInput").value;
 if(query.length<2) return;
 
 let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
-
 let data=await res.json();
 
 displayMovies(data.results);
