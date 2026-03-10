@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Movies & Series</title>
 
 <style>
+
 body{
 font-family:Arial,Helvetica,sans-serif;
 margin:0;
@@ -19,6 +22,17 @@ padding:20px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
+}
+
+/* NEW SCROLLING TEXT */
+.marquee-bar{
+background:#1f2937;
+color:white;
+padding:10px;
+font-size:14px;
+font-weight:bold;
+text-align:center;
+border-bottom:1px solid #374151;
 }
 
 .search-box{
@@ -64,17 +78,8 @@ cursor:pointer;
 font-weight:bold;
 }
 
-.categories button:hover,
-.search-box button:hover,
-.servers button:hover{
-background:#1d4ed8;
-}
-
-.section-title{
-text-align:center;
-margin:10px 0 0 0;
-font-size:22px;
-font-weight:bold;
+.categories button:hover{
+background:#2563eb;
 }
 
 .player{
@@ -134,21 +139,14 @@ text-align:center;
 margin:0;
 }
 
-.empty-note{
+.section-title{
 text-align:center;
-color:#cbd5e1;
-padding:10px 20px 0 20px;
+font-size:22px;
+margin-top:10px;
 }
 
-@media (max-width:768px){
-iframe{
-height:260px;
-}
-.search-box input{
-width:90%;
-}
-}
 </style>
+
 </head>
 
 <body>
@@ -156,6 +154,13 @@ width:90%;
 <header>
 🎬 Movies & Series
 </header>
+
+<!-- NEW SCROLLING MESSAGE -->
+<div class="marquee-bar">
+<marquee behavior="scroll" direction="left">
+🎬 Welcome to Movies & Series • Enjoy unlimited movies and TV shows • ⚠ If ads appear simply close or skip them and press play again • If one server fails switch to another server • Happy Watching!
+</marquee>
+</div>
 
 <div class="search-box">
 <input id="searchInput" placeholder="Search movies or series...">
@@ -174,10 +179,10 @@ width:90%;
 </div>
 
 <h2 class="section-title">Resume Watching</h2>
-<div id="continueMessage" class="empty-note">Movies you open will appear here.</div>
 <div class="movies" id="continueWatching"></div>
 
 <div class="player">
+
 <div class="servers">
 <button onclick="setServer(1)">Server 1</button>
 <button onclick="setServer(2)">Server 2</button>
@@ -186,13 +191,14 @@ width:90%;
 
 <iframe id="player"
 src="https://vidsrc.to/embed/movie/385687"
-allowfullscreen>
-</iframe>
+allowfullscreen></iframe>
+
 </div>
 
 <div class="movies" id="movies"></div>
 
 <script>
+
 const API_KEY="bf8178bc38b14afd2dbe7f66faa43ee5";
 
 let currentMovieType="movie";
@@ -200,6 +206,7 @@ let currentMovieID="385687";
 let currentServer=1;
 
 function updatePlayer(){
+
 let url="";
 
 if(currentServer===1){
@@ -221,6 +228,7 @@ url=currentMovieType==="movie"
 }
 
 document.getElementById("player").src=url;
+
 }
 
 function setServer(server){
@@ -229,6 +237,7 @@ updatePlayer();
 }
 
 function saveContinueWatching(id,type,title,poster){
+
 let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
 
 list = list.filter(movie => !(String(movie.id)===String(id) && movie.type===type));
@@ -245,80 +254,105 @@ list.pop();
 }
 
 localStorage.setItem("continueWatching",JSON.stringify(list));
+
 loadContinueWatching();
+
 }
 
 function loadContinueWatching(){
+
 let list = JSON.parse(localStorage.getItem("continueWatching")) || [];
-let container = document.getElementById("continueWatching");
-let msg = document.getElementById("continueMessage");
+
+let container=document.getElementById("continueWatching");
 
 container.innerHTML="";
 
-if(list.length===0){
-msg.style.display="block";
-return;
-}
-
-msg.style.display="none";
-
 list.forEach(movie=>{
+
 let div=document.createElement("div");
+
 div.className="movie";
+
 div.innerHTML=`
-<img src="${movie.poster}" alt="${movie.title}">
+<img src="${movie.poster}">
 <h4>${movie.title}</h4>
 `;
+
 div.onclick=()=>playMovie(movie.type,movie.id,movie.title,movie.poster);
+
 container.appendChild(div);
+
 });
+
 }
 
 function playMovie(type,id,title,poster){
+
 currentMovieType=type;
-currentMovieID=String(id);
+
+currentMovieID=id;
 
 updatePlayer();
+
 saveContinueWatching(id,type,title,poster);
 
 window.scrollTo({top:0,behavior:"smooth"});
+
 }
 
 async function loadTrending(){
+
 let res=await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 async function loadPopular(){
+
 let res=await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 async function loadTopRated(){
+
 let res=await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 async function loadCategory(id){
+
 let res=await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 async function loadTV(){
+
 let res=await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 function displayMovies(movies){
+
 let container=document.getElementById("movies");
+
 container.innerHTML="";
 
 movies.forEach(movie=>{
+
 if(!movie.poster_path) return;
 
 let title=movie.title || movie.name;
@@ -327,27 +361,38 @@ let id=movie.id;
 let type=movie.media_type || (movie.first_air_date ? "tv" : "movie");
 
 let div=document.createElement("div");
+
 div.className="movie";
+
 div.innerHTML=`
-<img src="${poster}" alt="${title}">
+<img src="${poster}">
 <h4>${title}</h4>
 `;
+
 div.onclick=()=>playMovie(type,id,title,poster);
+
 container.appendChild(div);
+
 });
+
 }
 
 async function searchMovie(){
-let query=document.getElementById("searchInput").value.trim();
+
+let query=document.getElementById("searchInput").value;
+
 if(query.length<2) return;
 
-let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+let res=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
 let data=await res.json();
-displayMovies(data.results || []);
+
+displayMovies(data.results);
+
 }
 
 loadTrending();
 loadContinueWatching();
+
 </script>
 
 </body>
