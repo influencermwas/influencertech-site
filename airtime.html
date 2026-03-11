@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Airtime Order</title>
 
@@ -29,6 +29,15 @@ margin:40px auto;
 background:#1f2937;
 padding:25px;
 border-radius:10px;
+}
+
+.balance{
+background:#111827;
+padding:10px;
+border-radius:6px;
+margin-bottom:20px;
+text-align:center;
+font-weight:bold;
 }
 
 input{
@@ -57,6 +66,11 @@ font-size:18px;
 color:#22c55e;
 }
 
+.out{
+color:red;
+font-weight:bold;
+}
+
 </style>
 
 </head>
@@ -69,7 +83,11 @@ Buy & Sell Airtime
 
 <div class="container">
 
-<label>Airtime Amount</label>
+<div class="balance" id="balance">
+Available Balance: 100000
+</div>
+
+<label>Enter Airtime Amount</label>
 <input type="number" id="amount" placeholder="Enter airtime amount">
 
 <button onclick="calculate()">Calculate</button>
@@ -80,19 +98,32 @@ Buy & Sell Airtime
 
 <script>
 
+let availableBalance = 100000;
+let buyRate = 0.8;
+let sellRate = 0.9;
+
 function calculate(){
 
-let amount=document.getElementById("amount").value;
+let amount = document.getElementById("amount").value;
 
 if(amount==""){
 alert("Enter amount");
 return;
 }
 
-let buy=amount*0.8;
-let sell=amount*0.9;
+if(amount > availableBalance){
 
-document.getElementById("result").innerHTML=
+document.getElementById("result").innerHTML =
+"<span class='out'>Out of Stock</span>";
+
+return;
+
+}
+
+let buy = amount * buyRate;
+let sell = amount * sellRate;
+
+document.getElementById("result").innerHTML =
 "You Receive (80%): "+buy+"<br>Sell Value (90%): "+sell;
 
 }
