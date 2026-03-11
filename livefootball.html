@@ -22,22 +22,29 @@ padding:20px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
-display:flex;
-justify-content:center;
-align-items:center;
-gap:10px;
 }
 
-/* football icon */
-header img{
-width:35px;
-height:35px;
+.back-btn{
+position:absolute;
+left:20px;
+top:20px;
+background:#2563eb;
+color:white;
+padding:8px 12px;
+border-radius:6px;
+text-decoration:none;
+font-size:14px;
 }
 
-.matches{
+.league{
 max-width:900px;
 margin:auto;
-padding:20px;
+padding:10px 20px;
+}
+
+.league h2{
+border-bottom:2px solid #374151;
+padding-bottom:5px;
 }
 
 .match{
@@ -85,15 +92,15 @@ font-size:14px;
 
 <body>
 
+<a class="back-btn" href="index.html">⬅ Home</a>
+
 <header>
-
-<img src="https://cdn-icons-png.flaticon.com/512/53/53283.png" alt="football">
-
-Live Football Matches
-
+⚽ Live Football Matches
 </header>
 
-<div class="matches">
+<div class="league">
+
+<h2>Premier League</h2>
 
 <div class="match">
 <span>Manchester United vs Arsenal</span>
@@ -101,13 +108,30 @@ Live Football Matches
 </div>
 
 <div class="match">
-<span>Barcelona vs Real Madrid</span>
+<span>Liverpool vs Chelsea</span>
 <button onclick="playMatch('STREAM_LINK_2')">Watch</button>
 </div>
 
+</div>
+
+<div class="league">
+
+<h2>La Liga</h2>
+
 <div class="match">
-<span>Liverpool vs Chelsea</span>
+<span>Barcelona vs Real Madrid</span>
 <button onclick="playMatch('STREAM_LINK_3')">Watch</button>
+</div>
+
+</div>
+
+<div class="league">
+
+<h2>Champions League</h2>
+
+<div class="match">
+<span>PSG vs Bayern Munich</span>
+<button onclick="playMatch('STREAM_LINK_4')">Watch</button>
 </div>
 
 </div>
@@ -128,7 +152,10 @@ function playMatch(link){
 
 document.getElementById("player").src = link;
 
-window.scrollTo({top:400,behavior:"smooth"});
+window.scrollTo({
+top:500,
+behavior:"smooth"
+});
 
 }
 
