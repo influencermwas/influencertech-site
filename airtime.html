@@ -1,155 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Buy Airtime</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Airtime Order</title>
 
 <style>
+
 body{
-font-family:Arial;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
+font-family:Arial,Helvetica,sans-serif;
 margin:0;
+background:#020617;
+color:white;
+}
+
+header{
+background:#111827;
+padding:20px;
+text-align:center;
+font-size:24px;
 }
 
 .container{
-background:#111827;
-padding:30px;
-border-radius:15px;
-text-align:center;
-width:360px;
+max-width:500px;
+margin:40px auto;
+background:#1f2937;
+padding:25px;
+border-radius:10px;
 }
 
 input{
-width:90%;
-padding:12px;
+width:100%;
+padding:10px;
 margin-top:10px;
-border-radius:8px;
 border:none;
+border-radius:5px;
 }
 
 button{
-padding:12px 20px;
 margin-top:15px;
+padding:12px;
+width:100%;
+background:#9333ea;
 border:none;
-border-radius:8px;
-background:#22c55e;
 color:white;
+font-size:16px;
+border-radius:6px;
 cursor:pointer;
 }
 
-.copy-btn{
-background:#2563eb;
-}
-
-.instructions{
-background:#020617;
-padding:15px;
-border-radius:10px;
+.result{
 margin-top:20px;
-font-size:14px;
+font-size:18px;
+color:#22c55e;
 }
 
 </style>
+
 </head>
 
 <body>
 
+<header>
+Buy & Sell Airtime
+</header>
+
 <div class="container">
 
-<h2>Buy Airtime</h2>
+<label>Airtime Amount</label>
+<input type="number" id="amount" placeholder="Enter airtime amount">
 
-<label>Till Name</label>
-<input type="text" id="tillname">
+<button onclick="calculate()">Calculate</button>
 
-<label>Receiving Number</label>
-<input type="text" id="number">
-
-<label>Amount Paid</label>
-<input type="number" id="amount">
-
-<label>To Receive</label>
-<input type="text" id="receive" readonly>
-
-<h3>M-Pesa Payment</h3>
-
-<p><b>Till Number:</b> <span id="till">8396206</span></p>
-
-<button class="copy-btn" onclick="copyTill()">Copy Till</button>
-
-<button onclick="confirmOrder()">Confirm Order</button>
-
-<div class="instructions">
-
-<b>How to Buy Airtime</b><br><br>
-
-1️⃣ Go to <b>M-Pesa</b><br>
-2️⃣ Select <b>Lipa na M-Pesa</b><br>
-3️⃣ Choose <b>Buy Goods</b><br>
-4️⃣ Enter Till Number <b>8396206</b><br>
-5️⃣ Enter the amount shown above<br>
-6️⃣ Complete payment then press <b>Confirm Order</b>
-
-</div>
+<div class="result" id="result"></div>
 
 </div>
 
 <script>
 
-/* Rate percentage */
-let rate = 90
+function calculate(){
 
-let amountInput = document.getElementById("amount")
-let receiveInput = document.getElementById("receive")
+let amount=document.getElementById("amount").value;
 
-amountInput.addEventListener("input", function(){
-
-let amount = amountInput.value
-
-if(amount === ""  amount <= 0){
-receiveInput.value = ""
-return
+if(amount==""){
+alert("Enter amount");
+return;
 }
 
-let airtime = amount / (rate/100)
+let buy=amount*0.8;
+let sell=amount*0.9;
 
-receiveInput.value = Math.round(airtime)
-
-})
-
-function copyTill(){
-
-let till = document.getElementById("till").innerText
-
-navigator.clipboard.writeText(till)
-
-alert("Till number copied")
-
-}
-
-function confirmOrder(){
-
-let tillname=document.getElementById("tillname").value
-let number=document.getElementById("number").value
-let amount=document.getElementById("amount").value
-let airtime=document.getElementById("receive").value
-
-if(!tillname  !number || !amount){
-alert("Fill all fields")
-return
-}
-
-let msg =
-"NEW AIRTIME ORDER%0A"+
-"Till Name: "+tillname+"%0A"+
-"Receiving Number: "+number+"%0A"+
-"Amount Paid: "+amount+"%0A"+
-"Airtime: "+airtime
-
-window.open("https://wa.me/254746975939?text="+msg)
+document.getElementById("result").innerHTML=
+"You Receive (80%): "+buy+"<br>Sell Value (90%): "+sell;
 
 }
 
