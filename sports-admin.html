@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Sports Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#020617;
+color:white;
+}
+
+header{
+background:#111827;
+padding:20px;
+text-align:center;
+font-size:22px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+}
+
+button{
+margin-top:15px;
+padding:10px;
+width:100%;
+background:#2563eb;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.match{
+background:#1f2937;
+padding:10px;
+margin-top:10px;
+border-radius:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.delete{
+background:red;
+padding:5px 10px;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+Sports Admin Dashboard
+</header>
+
+<div class="container" id="loginBox">
+
+<h3>Admin Login</h3>
+
+<input type="password" id="password" placeholder="Enter password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<div class="container" id="adminPanel" style="display:none;">
+
+<h3>Add Match</h3>
+
+<select id="league">
+<option>Premier League</option>
+<option>La Liga</option>
+<option>Champions League</option>
+<option>Serie A</option>
+</select>
+
+<input id="teams" placeholder="Teams (Example: Arsenal vs Chelsea)">
+
+<input type="time" id="time">
+
+<input id="stream" placeholder="Stream Link">
+
+<button onclick="addMatch()">Add Match</button>
+
+<h3>Matches</h3>
+
+<div id="matchList"></div>
+
+</div>
+
+<script>
+
+const PASSWORD="Brian4503";
+
+function login(){
+
+let pass=document.getElementById("password").value;
+
+if(pass===PASSWORD){
+
+document.getElementById("loginBox").style.display="none";
+document.getElementById("adminPanel").style.display="block";
+
+loadMatches();
+
+}else{
+
+alert("Wrong password");
+
+}
+
+}
+
+function addMatch(){
+
+let league=document.getElementById("league").value;
+let teams=document.getElementById("teams").value;
+let time=document.getElementById("time").value;
+let stream=document.getElementById("stream").value;
+
+let matches=JSON.parse(localStorage.getItem("matches")||"[]");
+
+matches.push({league,teams,time,stream});
+
+localStorage.setItem("matches",JSON.stringify(matches));
+
+loadMatches();
+
+}
+
+function loadMatches(){
+
+let matches=JSON.parse(localStorage.getItem("matches")||"[]");
+
+let list=document.getElementById("matchList");
+
+list.innerHTML="";
+
+matches.forEach((m,i)=>{
+
+let div=document.createElement("div");
+
+div.className="match";
+
+div.innerHTML=`
+<span>${m.league} - ${m.teams} (${m.time})</span>
+<button class="delete" onclick="deleteMatch(${i})">Delete</button>
+`;
+
+list.appendChild(div);
+
+});
+
+}
+
+function deleteMatch(index){
+
+let matches=JSON.parse(localStorage.getItem("matches"));
+
+matches.splice(index,1);
+
+localStorage.setItem("matches",JSON.stringify(matches));
+
+loadMatches();
+
+}
+
+</script>
+
+</body>
+</html>
