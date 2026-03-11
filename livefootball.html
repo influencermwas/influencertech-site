@@ -24,37 +24,38 @@ font-size:24px;
 font-weight:bold;
 }
 
-.back-btn{
+.back{
 position:absolute;
 left:20px;
 top:20px;
 background:#2563eb;
-color:white;
 padding:8px 12px;
 border-radius:6px;
 text-decoration:none;
+color:white;
 font-size:14px;
 }
 
-.league{
+.matches{
 max-width:900px;
 margin:auto;
-padding:10px 20px;
-}
-
-.league h2{
-border-bottom:2px solid #374151;
-padding-bottom:5px;
+padding:20px;
 }
 
 .match{
 background:#1f2937;
-margin-bottom:10px;
+margin-bottom:12px;
 padding:15px;
 border-radius:8px;
 display:flex;
 justify-content:space-between;
 align-items:center;
+}
+
+.live{
+color:red;
+font-weight:bold;
+margin-right:10px;
 }
 
 .match button{
@@ -70,6 +71,25 @@ cursor:pointer;
 max-width:1000px;
 margin:20px auto;
 padding:20px;
+}
+
+.servers{
+text-align:center;
+margin-bottom:10px;
+}
+
+.servers button{
+margin:5px;
+padding:8px 14px;
+border:none;
+border-radius:6px;
+background:#374151;
+color:white;
+cursor:pointer;
+}
+
+.servers button:hover{
+background:#2563eb;
 }
 
 iframe{
@@ -92,70 +112,66 @@ font-size:14px;
 
 <body>
 
-<a class="back-btn" href="index.html">⬅ Home</a>
+<a class="back" href="index.html">⬅ Home</a>
 
 <header>
 ⚽ Live Football Matches
 </header>
 
-<div class="league">
-
-<h2>Premier League</h2>
+<div class="matches">
 
 <div class="match">
-<span>Manchester United vs Arsenal</span>
-<button onclick="playMatch('STREAM_LINK_1')">Watch</button>
+<span><span class="live">🔴 LIVE</span>Manchester United vs Arsenal</span>
+<button onclick="loadMatch('STREAM1','STREAM2','STREAM3')">Watch</button>
+</div>
+
+<div class="match">
+<span>Barcelona vs Real Madrid</span>
+<button onclick="loadMatch('STREAM4','STREAM5','STREAM6')">Watch</button>
 </div>
 
 <div class="match">
 <span>Liverpool vs Chelsea</span>
-<button onclick="playMatch('STREAM_LINK_2')">Watch</button>
-</div>
-
-</div>
-
-<div class="league">
-
-<h2>La Liga</h2>
-
-<div class="match">
-<span>Barcelona vs Real Madrid</span>
-<button onclick="playMatch('STREAM_LINK_3')">Watch</button>
-</div>
-
-</div>
-
-<div class="league">
-
-<h2>Champions League</h2>
-
-<div class="match">
-<span>PSG vs Bayern Munich</span>
-<button onclick="playMatch('STREAM_LINK_4')">Watch</button>
+<button onclick="loadMatch('STREAM7','STREAM8','STREAM9')">Watch</button>
 </div>
 
 </div>
 
 <div class="player">
 
+<div class="servers">
+<button onclick="setServer(0)">Server 1</button>
+<button onclick="setServer(1)">Server 2</button>
+<button onclick="setServer(2)">Server 3</button>
+</div>
+
 <iframe id="player" allowfullscreen></iframe>
 
 <p class="warning">
-⚠ If the stream doesn't load, refresh the page.
+⚠ If stream doesn't start, switch server.
 </p>
 
 </div>
 
 <script>
 
-function playMatch(link){
+let streams=[];
 
-document.getElementById("player").src = link;
+function loadMatch(s1,s2,s3){
 
-window.scrollTo({
-top:500,
-behavior:"smooth"
-});
+streams=[s1,s2,s3];
+
+document.getElementById("player").src=s1;
+
+window.scrollTo({top:500,behavior:"smooth"});
+
+}
+
+function setServer(index){
+
+if(streams[index]){
+document.getElementById("player").src=streams[index];
+}
 
 }
 
