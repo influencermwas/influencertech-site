@@ -42,16 +42,6 @@ margin:auto;
 padding:15px;
 }
 
-.league{
-margin-top:25px;
-}
-
-.league h2{
-border-bottom:2px solid #374151;
-padding-bottom:6px;
-font-size:18px;
-}
-
 .match{
 background:#1f2937;
 margin-top:10px;
@@ -72,34 +62,13 @@ cursor:pointer;
 font-size:14px;
 }
 
-.live{
-color:#ef4444;
-font-weight:bold;
-margin-right:8px;
+.league{
+font-size:14px;
+color:#cbd5e1;
 }
 
 .player{
-margin-top:30px;
-}
-
-.servers{
-text-align:center;
-margin-bottom:8px;
-}
-
-.servers button{
-margin:3px;
-padding:6px 10px;
-border:none;
-border-radius:6px;
-background:#374151;
-color:white;
-cursor:pointer;
-font-size:13px;
-}
-
-.servers button:hover{
-background:#2563eb;
+margin-top:25px;
 }
 
 iframe{
@@ -117,13 +86,13 @@ color:#cbd5e1;
 margin-top:5px;
 }
 
-/* mobile layout */
+.empty{
+text-align:center;
+margin-top:40px;
+color:#9ca3af;
+}
 
 @media(max-width:600px){
-
-header{
-font-size:18px;
-}
 
 .match{
 flex-direction:column;
@@ -136,7 +105,7 @@ width:100%;
 }
 
 iframe{
-height:260px;
+height:250px;
 }
 
 }
@@ -149,66 +118,19 @@ height:260px;
 <a class="back" href="index.html">⬅ Home</a>
 
 <header>
-⚽ Live Football
+⚽ Live Football Matches
 </header>
 
 <div class="container">
 
-<!-- Premier League -->
-
-<div class="league">
-<h2>🏆 Premier League</h2>
-
-<div class="match">
-<span><span class="live">🔴 LIVE</span>Manchester United vs Arsenal</span>
-<button onclick="loadMatch('STREAM1','STREAM2','STREAM3')">Watch</button>
-</div>
-
-<div class="match">
-<span>Liverpool vs Chelsea</span>
-<button onclick="loadMatch('STREAM4','STREAM5','STREAM6')">Watch</button>
-</div>
-
-</div>
-
-<!-- La Liga -->
-
-<div class="league">
-<h2>🇪🇸 La Liga</h2>
-
-<div class="match">
-<span>Barcelona vs Real Madrid</span>
-<button onclick="loadMatch('STREAM7','STREAM8','STREAM9')">Watch</button>
-</div>
-
-</div>
-
-<!-- Champions League -->
-
-<div class="league">
-<h2>⭐ Champions League</h2>
-
-<div class="match">
-<span>PSG vs Bayern Munich</span>
-<button onclick="loadMatch('STREAM10','STREAM11','STREAM12')">Watch</button>
-</div>
-
-</div>
-
-<!-- Player -->
+<div id="matches"></div>
 
 <div class="player">
-
-<div class="servers">
-<button onclick="setServer(0)">Server 1</button>
-<button onclick="setServer(1)">Server 2</button>
-<button onclick="setServer(2)">Server 3</button>
-</div>
 
 <iframe id="player" allowfullscreen></iframe>
 
 <p class="warning">
-⚠ If stream doesn't start switch server.
+⚠ If stream doesn't load refresh the page.
 </p>
 
 </div>
@@ -217,25 +139,53 @@ height:260px;
 
 <script>
 
-let streams=[];
+function loadMatches(){
 
-function loadMatch(s1,s2,s3){
+let matches = JSON.parse(localStorage.getItem("matches") || "[]");
 
-streams=[s1,s2,s3];
+let container = document.getElementById("matches");
 
-document.getElementById("player").src=s1;
+container.innerHTML="";
 
-window.scrollTo({top:500,behavior:"smooth"});
+if(matches.length === 0){
+
+container.innerHTML="<div class='empty'>No matches scheduled</div>";
+return;
+
+}
+
+matches.forEach(m=>{
+
+let div=document.createElement("div");
+
+div.className="match";
+
+div.innerHTML=`
+<div>
+<div class="league">${m.league}</div>
+<div>${m.teams} (${m.time})</div>
+</div>
+<button onclick="watch('${m.stream}')">Watch</button>
+`;
+
+container.appendChild(div);
+
+});
 
 }
 
-function setServer(index){
+function watch(link){
 
-if(streams[index]){
-document.getElementById("player").src=streams[index];
+document.getElementById("player").src = link;
+
+window.scrollTo({
+top:500,
+behavior:"smooth"
+});
+
 }
 
-}
+loadMatches();
 
 </script>
 
